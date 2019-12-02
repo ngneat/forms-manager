@@ -29,7 +29,7 @@ First, install the library:
 ## Installation
 
 ```
-npm i @ngenat/forms-manager
+npm i @ngneat/forms-manager
 ```
 
 Then, create a component with a form:
