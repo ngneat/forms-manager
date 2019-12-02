@@ -1,6 +1,6 @@
-# Contributing to Transloco
+# Contributing to Forms Manager
 
-🙏 We would ❤️ for you to contribute to Transloco and help make it even better than it is today!
+🙏 We would ❤️ for you to contribute to Forms Manager and help make it even better than it is today!
 
 # Developing
 
@@ -14,7 +14,6 @@ Run the tests:
 
 ```bash
 npm test
-npm run e2e
 ```
 
 Run the playground app:

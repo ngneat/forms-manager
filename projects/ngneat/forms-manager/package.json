@@ -1,0 +1,28 @@
+{
+  "name": "@ngneat/forms-manager",
+  "version": "1.0.0",
+  "description": "Forms Manager library for Angular",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/ngneat/forms-manager/issues"
+  },
+  "homepage": "https://github.com/ngneat/forms-manager#readme",
+  "keywords": [
+    "angular",
+    "angular 2",
+    "forms",
+    "persist forms",
+    "cross validation"
+  ],
+  "author": {
+    "name": "Netanel Basal",
+    "email": "netanel7799@gmail.com",
+    "url": "https://netbasal.com"
+  },
+  "dependencies": {
+    "lodash.isequal": "^4.5.0"
+  }
+}

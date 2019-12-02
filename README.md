@@ -10,7 +10,7 @@
 [![coc-badge](https://img.shields.io/badge/codeof-conduct-ff69b4.svg?style=flat-square)]()
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e5079.svg?style=flat-square)](https://github.com/semantic-release/semantic-release)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
-[![All Contributors](https://img.shields.io/badge/all_contributors-0-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
 
 <hr />
 
@@ -24,16 +24,18 @@ This is powerful, as it gives you the following abilities:
 
 The goal in creating this was to work with the existing Angular form ecosystem, and save you the trouble of learning a new API. Let’s see how it works:
 
+First, install the library:
+
+## Installation
+
+```
+npm i @ngenat/forms-manager
+```
+
+Then, create a component with a form:
+
 ```ts
 import { NgFormsManager } from '@ngneat/forms-manager';
-
-export interface FormsState {
-  onboarding: {
-    name: string;
-    age: number;
-    city: string;
-  };
-}
 
 @Component({
   template: `
@@ -46,7 +48,7 @@ export interface FormsState {
 })
 export class OnboardingComponent {
   constructor(
-    private formsManager: NgFormsManager<FormsState>,
+    private formsManager: NgFormsManager,
     private builder: FormBuilder
   ) {}
 

@@ -2,12 +2,15 @@
   "name": "ngneat-forms-manager",
   "version": "0.0.0",
   "scripts": {
+    "release": "cd projects/ngneat/forms-manager/ && standard-version --infile ../../../CHANGELOG.md",
+    "test": "ng test @ngneat/forms-manager",
+    "build": "ng build @ngneat/forms-manager && npm run copy:readme",
     "ng": "ng",
+    "prettier": "prettier --write \"**/*.{js,json,css,scss,less,md,ts,html,component.html}\"",
     "start": "ng serve",
-    "build": "ng build",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "commit": "git cz",
+    "contributors:add": "all-contributors add",
+    "copy:readme": "cp README.md dist/ngneat/forms-manager"
   },
   "private": true,
   "dependencies": {
@@ -20,19 +23,29 @@
     "@angular/platform-browser": "~7.0.0",
     "@angular/platform-browser-dynamic": "~7.0.0",
     "@angular/router": "~7.0.0",
+    "@schuchard/prettier": "^3.1.0",
     "core-js": "^2.5.4",
+    "lodash.isequal": "^4.5.0",
+    "ngx-semantic-version": "^1.2.1",
     "rxjs": "~6.3.3",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.10.0",
+    "@angular-devkit/build-ng-packagr": "~0.10.0",
     "@angular/cli": "~7.0.4",
     "@angular/compiler-cli": "~7.0.0",
     "@angular/language-service": "~7.0.0",
-    "@types/node": "~8.9.4",
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "~2.0.3",
+    "@types/node": "~8.9.4",
+    "all-contributors-cli": "^6.11.1",
     "codelyzer": "~4.5.0",
+    "commitizen": "^4.0.3",
+    "cz-conventional-changelog": "^3.0.2",
+    "husky": "^3.0.9",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~3.0.0",
@@ -40,9 +53,33 @@
     "karma-coverage-istanbul-reporter": "~2.0.1",
     "karma-jasmine": "~1.1.2",
     "karma-jasmine-html-reporter": "^0.2.2",
+    "lint-staged": "9.5.0",
+    "ng-packagr": "^4.2.0",
+    "prettier": "1.19.1",
     "protractor": "~5.4.0",
+    "standard-version": "^7.0.0",
     "ts-node": "~7.0.0",
+    "tsickle": ">=0.29.0",
+    "tslib": "^1.9.0",
     "tslint": "~5.11.0",
+    "tslint-config-prettier": "1.18.0",
     "typescript": "~3.1.1"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -e $GIT_PARAMS",
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,json,css,scss,less,md,ts,html,component.html}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
