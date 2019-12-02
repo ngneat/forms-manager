@@ -71,7 +71,7 @@ export class OnboardingComponent {
 As you can see, we’re still working with the existing API in order to create a form in Angular. We’re injecting the `NgFormsManager` and calling the `upsert` method, giving it the form name and an `AbstractForm`.
 From that point on, `NgFormsManager` will track the form value changes and update the store accordingly.
 
-With this setup, you’ll have an extensive API to query and update the store from anywhere in your application:
+With this setup, you’ll have an extensive API to query the store and update the form from anywhere in your application:
 
 ```ts
 
