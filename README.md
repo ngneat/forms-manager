@@ -71,34 +71,50 @@ export class OnboardingComponent {
 As you can see, we’re still working with the existing API in order to create a form in Angular. We’re injecting the `NgFormsManager` and calling the `upsert` method, giving it the form name and an `AbstractForm`.
 From that point on, `NgFormsManager` will track the form value changes and update the store accordingly.
 
-With this setup, you’ll have an extensive API to query the store from anywhere in your application:
+With this setup, you’ll have an extensive API to query and update the store from anywhere in your application:
 
 ```ts
-formsManager.selectForm(formName).subscribe(form => {});
-formsManager.getForm(formName);
-formsManager.hasForm(formName);
 
-formsManager.selectControl().subscribe(control => {});
-formsManager.selectControl('name').subscribe(nameControl => {});
-formsManager.getControl(path?);
+@Component({
+  selector: 'my-comp',
+  templateUrl: './app.component.html',
+})
+export class MyCompComponent {
+  constructor(private formsManager: NgFormsManager) {}
 
-formsManager.selectErrors(formName, path?).subscribe(errors => {});
-formsManager.selectValue(formName, path?).subscribe(value => {});
-formsManager.selectDisabled(formName, path?).subscribe(disabled => {});
-formsManager.selectDirty(formName, path?).subscribe(dirty => {});
-formsManager.selectValid(formName, path?).subscribe(valid => {});
+  ngOnInit() {
+    this.formsManager.selectForm(formName).subscribe(form => {});
+    this.formsManager.getForm(formName);
+    this.formsManager.hasForm(formName);
 
-formsManager.patchValue(formName, value, options);
-formsManager.setValue(formName, value, options);
+    this.formsManager.selectControl().subscribe(control => {});
+    this.formsManager.selectControl('name').subscribe(nameControl => {});
+    this.formsManager.getControl(path?);
 
-formsManager.upsert(formName, abstractContorl, config: {
-  debounceTime: number;
-  persistState: boolean;
-  arrControlFactory: ArrayControlFactory | HashMap<ArrayControlFactory>
+    this.formsManager.selectErrors(formName, path?).subscribe(errors => {});
+    this.formsManager.selectValue(formName, path?).subscribe(value => {});
+    this.formsManager.selectDisabled(formName, path?).subscribe(disabled => {});
+    this.formsManager.selectDirty(formName, path?).subscribe(dirty => {});
+    this.formsManager.selectValid(formName, path?).subscribe(valid => {});
+
+    this.formsManager.patchValue(formName, value, options);
+    this.formsManager.setValue(formName, value, options);
+  }
+
+  ngOnDestroy() {
+    formsManager.unsubscribe(formName?);
+  }
+}
+```
+
+## Persist to Local Storage
+
+When passing the form to the `upsert` method, pass the `persistState` flag:
+
+```ts
+formsManager.upsert(formName, abstractContorl, {
+  persistState: true;
 });
-
-formsManager.unsubscribe(formName?);
-formsManager.destroy(formName?);
 ```
 
 ## Validators
