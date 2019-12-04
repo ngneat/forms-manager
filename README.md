@@ -87,9 +87,8 @@ export class MyCompComponent {
     this.formsManager.getForm(formName);
     this.formsManager.hasForm(formName);
 
-    this.formsManager.selectControl().subscribe(control => {});
-    this.formsManager.selectControl('name').subscribe(nameControl => {});
-    this.formsManager.getControl(path?);
+    this.formsManager.selectControl(formName, 'email').subscribe(nameControl => {});
+    this.formsManager.getControl(formName, path?);
 
     this.formsManager.selectErrors(formName, path?).subscribe(errors => {});
     this.formsManager.selectValue(formName, path?).subscribe(value => {});
