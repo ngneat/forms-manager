@@ -30,12 +30,12 @@ export class NgFormsManager<FormsState = any> {
     return this.selectControl(formName, path).pipe(map(control => control.disabled));
   }
 
-  selectValue<T = any>(formName: keyof FormsState, path?: string): Observable<T> {
+  selectValue<T extends keyof FormsState>(formName: T, path?: string): Observable<FormsState[T]> {
     return this.selectControl(formName, path).pipe(map(control => control.value));
   }
 
-  selectErrors(formName: keyof FormsState, path?: string): Observable<any> {
-    return this.selectControl(formName, path).pipe(map(control => control.errors));
+  selectErrors<T = any>(formName: keyof FormsState, path?: string): Observable<T> {
+    return this.selectControl(formName, path).pipe(map(control => control.errors as T));
   }
 
   /**
@@ -55,6 +55,7 @@ export class NgFormsManager<FormsState = any> {
       );
   }
 
+  // TODO: _AbstractControl should take a generic that should type the `value` property
   getControl(formName: keyof FormsState, path?: string): _AbstractControl {
     if (!path) {
       return this.getForm(formName);
@@ -68,6 +69,7 @@ export class NgFormsManager<FormsState = any> {
     return null;
   }
 
+  // TODO: _AbstractControl should take a generic that should type the `value` property
   selectForm(
     formName: keyof FormsState,
     options: { filterNil: true } = { filterNil: true }

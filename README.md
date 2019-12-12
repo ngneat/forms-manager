@@ -279,6 +279,34 @@ export class HomeComponent {
 }
 ```
 
+## NgFormsManager Generic Type
+
+`NgFormsManager` can take a generic type where you can define the forms shape. For example:
+
+```ts
+export interface AppForms = {
+  onboarding: {
+    name: string;
+    age: number;
+    city: string;
+  }
+}
+```
+
+This will make sure that the queries are typed, and you don't make any mistakes in the form name.
+
+```ts
+export class OnboardingComponent {
+  constructor(private formsManager: NgFormsManager<AppForms>, private builder: FormBuilder) {}
+
+  ngOnInit() {
+    this.formsManager.selectValue('onboarding').subscribe(value => {
+      // value now typed as AppForms['onboarding']
+    });
+  }
+}
+```
+
 ## NgFormsManager Config
 
 You can override the default config by passing the `NG_FORMS_MANAGER_CONFIG` provider:
