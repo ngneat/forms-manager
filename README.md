@@ -118,21 +118,21 @@ const errors$ = formsManager.selectErrors('onboarding');
 const nameErros$ = formsManager.selectErrors('onboarding', 'name');
 ```
 
-- `selectControl()` - Observe the control state
+- `selectControl()` - Observe the control's state
 
 ```ts
 const control$ = formsManager.selectControl('onboarding');
 const nameControl$ = formsManager.selectControl('onboarding', 'name');
 ```
 
-- `getControl()` - Get the control state
+- `getControl()` - Get the control's state
 
 ```ts
 const control = formsManager.getControl('onboarding');
 const nameControl = formsManager.getControl('onboarding', 'name');
 ```
 
-It returns the following state:
+`selectControl` and `getControl` will return the following state:
 
 ```ts
 {
@@ -149,13 +149,13 @@ It returns the following state:
 }
 ```
 
-- `selectForm()` - Observe the form state
+- `selectForm()` - Observe the form's state
 
 ```ts
 const form$ = formsManager.selectForm('onboarding');
 ```
 
-- `getForm()` - Get the form state
+- `getForm()` - Get the form's state
 
 ```ts
 const form = formsManager.getForm('onboarding');
@@ -167,13 +167,13 @@ const form = formsManager.getForm('onboarding');
 const hasForm = formsManager.hasForm('onboarding');
 ```
 
-- `patchValue()` - A facade to the original `patchValue` method
+- `patchValue()` - A proxy to the original `patchValue` method
 
 ```ts
 formsManager.patchValue('onboarding', value, options);
 ```
 
-- `setValue()` - A facade to the original `setValue` method
+- `setValue()` - A proxy to the original `setValue` method
 
 ```ts
 formsManager.setValue('onboarding', value, options);
@@ -186,7 +186,7 @@ formsManager.unsubscribe('onboarding');
 formsManager.unsubscribe();
 ```
 
-- `clear()` - Deletes the form from the store
+- `clear()` - Delete the form from the store
 
 ```ts
 formsManager.clear('onboarding');
