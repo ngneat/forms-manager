@@ -4,6 +4,16 @@
  <img width="50%" height="50%" src="./logo.png">
 </p>
 
+> The Foundation for Proper Form Management
+
+## 🔮 Features
+
+✅ Auto persists the form's state upon user navigation.<br>
+✅ Provides an API to reactively querying any form, from anywhere. <br>
+✅ Persist the form's state to local storage.
+
+<br>
+
 [![Build Status](https://img.shields.io/travis/datorama/akita.svg?style=flat-square)](https://travis-ci.org/ngneat/transloco)
 [![commitizen](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square)]()
 [![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)]()
@@ -63,52 +73,138 @@ export class OnboardingComponent {
   }
 
   ngOnDestroy() {
-    this.formsManager.unsubscribe();
+    this.formsManager.unsubscribe('onboarding');
   }
 }
 ```
 
 As you can see, we’re still working with the existing API in order to create a form in Angular. We’re injecting the `NgFormsManager` and calling the `upsert` method, giving it the form name and an `AbstractForm`.
-From that point on, `NgFormsManager` will track the form value changes and update the store accordingly.
+From that point on, `NgFormsManager` will track the `form` value changes, and update the store accordingly.
 
 With this setup, you’ll have an extensive API to query the store and update the form from anywhere in your application:
 
+## API
+
+- `selectValid()` - Whether the control is valid
+
 ```ts
+const isFormValid$ = formsManager.selectValid('onboarding');
+const isNameValid$ = formsManager.selectValid('onboarding', 'name');
+```
 
-@Component({
-  selector: 'my-comp',
-  templateUrl: './app.component.html',
-})
-export class MyCompComponent {
-  constructor(private formsManager: NgFormsManager) {}
+- `selectDirty()` - Whether the control is dirty
 
-  ngOnInit() {
-    this.formsManager.selectForm(formName).subscribe(form => {});
-    this.formsManager.getForm(formName);
-    this.formsManager.hasForm(formName);
+```ts
+const isFormDirty$ = formsManager.selectDirty('onboarding');
+const isNameDirty$ = formsManager.selectDirty('onboarding', 'name');
+```
 
-    this.formsManager.selectControl(formName, 'email').subscribe(emailControl => {});
-    this.formsManager.getControl(formName, path?);
+- `selectDisabled()` - Whether the control is disabled
 
-    this.formsManager.selectErrors(formName, path?).subscribe(errors => {});
-    this.formsManager.selectValue(formName, path?).subscribe(value => {});
-    this.formsManager.selectDisabled(formName, path?).subscribe(disabled => {});
-    this.formsManager.selectDirty(formName, path?).subscribe(dirty => {});
-    this.formsManager.selectValid(formName, path?).subscribe(valid => {});
+```ts
+const isFormDisabled$ = formsManager.selectDisabled('onboarding');
+const isNameDisabled$ = formsManager.selectDisabled('onboarding', 'name');
+```
 
-    this.formsManager.patchValue(formName, value, options);
-    this.formsManager.setValue(formName, value, options);
-  }
+- `selectValue()` - Observe the control's value
 
-  ngOnDestroy() {
-    formsManager.unsubscribe(formName?);
-  }
+```ts
+const value$ = formsManager.selectValue('onboarding');
+const nameValue$ = formsManager.selectValue('onboarding', 'name');
+```
+
+- `selectErrors()` - Observe the control's errors
+
+```ts
+const errors$ = formsManager.selectErrors('onboarding');
+const nameErros$ = formsManager.selectErrors('onboarding', 'name');
+```
+
+- `selectControl()` - Observe the control state
+
+```ts
+const control$ = formsManager.selectControl('onboarding');
+const nameControl$ = formsManager.selectControl('onboarding', 'name');
+```
+
+- `getControl()` - Get the control state
+
+```ts
+const control = formsManager.getControl('onboarding');
+const nameControl = formsManager.getControl('onboarding', 'name');
+```
+
+It returns the following state:
+
+```ts
+{
+   value: any,
+   rawValue: object,
+   errors: object,
+   valid: boolean,
+   dirty: boolean,
+   invalid: boolean,
+   disabled: boolean,
+   touched: boolean,
+   pristine: boolean,
+   pending: boolean,
 }
+```
+
+- `selectForm()` - Observe the form state
+
+```ts
+const form$ = formsManager.selectForm('onboarding');
+```
+
+- `getForm()` - Get the form state
+
+```ts
+const form = formsManager.getForm('onboarding');
+```
+
+- `hasForm()` - Whether the form exists
+
+```ts
+const hasForm = formsManager.hasForm('onboarding');
+```
+
+- `patchValue()` - A facade to the original `patchValue` method
+
+```ts
+formsManager.patchValue('onboarding', value, options);
+```
+
+- `setValue()` - A facade to the original `setValue` method
+
+```ts
+formsManager.setValue('onboarding', value, options);
+```
+
+- `unsubscribe()` - Unsubscribe from the form's `valueChanges` observable (always call it on `ngOnDestroy`)
+
+```ts
+formsManager.unsubscribe('onboarding');
+formsManager.unsubscribe();
+```
+
+- `clear()` - Deletes the form from the store
+
+```ts
+formsManager.clear('onboarding');
+formsManager.clear();
+```
+
+- `destroy()` - Destroy the form (Internally calls `clear` and `unsubscribe`)
+
+```ts
+formsManager.destroy('onboarding');
+formsManager.destroy();
 ```
 
 ## Persist to Local Storage
 
-When passing the form to the `upsert` method, pass the `persistState` flag:
+In the `upsert` method, pass the `persistState` flag:
 
 ```ts
 formsManager.upsert(formName, abstractContorl, {
@@ -142,8 +238,8 @@ export class HomeComponent{
     });
 
     /*
-    * Check the `minPrice` value in the settings form
-    * and update the price's control validators
+    * Observe the `minPrice` value in the `settings` form
+    * and update the price `control` validators
     */
     this.formsManager.selectValue<number>('settings', 'minPrice')
      .subscribe(minPrice => setValidators(this.form.get('price'), Validators.min(minPrice));
@@ -153,7 +249,7 @@ export class HomeComponent{
 
 ## Using FormArray Controls
 
-When working with a `FormArray`, it's required to pass a factory function that tells how to create the controls inside the array. For example:
+When working with a `FormArray`, it's required to pass a `factory` function that instruct how to create the `controls` inside the `FormArray`. For example:
 
 ```ts
 import { NgFormsManager } from '@ngneat/forms-manager';
@@ -165,19 +261,17 @@ export class HomeComponent {
   constructor(private formsManager: NgFormsManager<FormsState>) {}
 
   ngOnInit() {
-    const createControl = value => new FormControl(value);
+    this.skills = new FormArray([]);
 
-    this.skills = new FormArray([createControl('JS')]);
-
-    /** Or inside form group */
+    /** Or inside a FormGroup */
     this.config = new FormGroup({
-      skills: new FormArray([createControl('JS')]),
+      skills: new FormArray([]),
     });
 
     this.formsManager
-      .upsert('skills', this.skills, { arrControlFactory: createControl })
+      .upsert('skills', this.skills, { arrControlFactory: value => new FormControl(value) })
       .upsert('config', this.config, {
-        arrControlFactory: { skills: createControl },
+        arrControlFactory: { skills: value => new FormControl(value) },
       });
   }
 
