@@ -46,11 +46,9 @@ export class DemoComponent implements OnInit {
       }),
     });
 
-    this.sub = this.formsManager.selectValue<number>('settings', 'minPrice').subscribe(minPrice => {
+    this.sub = this.formsManager.selectValue('settings', 'minPrice').subscribe(minPrice => {
       setValidators(this.group.get('price'), Validators.min(minPrice));
     });
-
-    const createSkillControl = val => new FormControl(null, Validators.required);
 
     this.settings = new FormGroup({
       minPrice: new FormControl(10),
@@ -62,7 +60,7 @@ export class DemoComponent implements OnInit {
       .upsert('single', this.email, { persistState: true })
       .upsert('config', this.config, {
         persistState: true,
-        arrControlFactory: { skills: createSkillControl },
+        arrControlFactory: { skills: () => new FormControl(null, Validators.required) },
       })
       .upsert('group', this.group, {
         persistState: true,

@@ -108,7 +108,7 @@ const isNameDisabled$ = formsManager.selectDisabled('onboarding', 'name');
 
 ```ts
 const value$ = formsManager.selectValue('onboarding');
-const nameValue$ = formsManager.selectValue('onboarding', 'name');
+const nameValue$ = formsManager.selectValue<string>('onboarding', 'name');
 ```
 
 - `selectErrors()` - Observe the control's errors

@@ -1,6 +1,6 @@
 import { Inject, Injectable, Optional } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
-import { clone, coerceArray, filterControlKeys, filterNil, isBrowser } from './utils';
+import { clone, coerceArray, filterControlKeys, filterNil, isBrowser, mergeDeep } from './utils';
 import { merge, Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { FormsStore } from './forms-manager.store';
@@ -30,7 +30,9 @@ export class NgFormsManager<FormsState = any> {
     return this.selectControl(formName, path).pipe(map(control => control.disabled));
   }
 
-  selectValue<T extends keyof FormsState>(formName: T, path?: string): Observable<FormsState[T]> {
+  selectValue<T extends keyof FormsState>(formName: T, path?: string): Observable<FormsState[T]>;
+  selectValue<T = any>(formName: keyof FormsState, path: string): Observable<T>;
+  selectValue(formName: keyof FormsState, path?: string): Observable<any> {
     return this.selectControl(formName, path).pipe(map(control => control.value));
   }
 
@@ -41,9 +43,12 @@ export class NgFormsManager<FormsState = any> {
   /**
    * If no path specified it means that it's a single FormControl or FormArray
    */
-  selectControl(formName: keyof FormsState, path?: string): Observable<_AbstractControl> {
+  selectControl<T = any>(
+    formName: keyof FormsState,
+    path?: string
+  ): Observable<_AbstractControl<T>> {
     if (!path) {
-      return this.selectForm(formName);
+      return this.selectForm(formName) as any;
     }
 
     return this.store
@@ -55,10 +60,9 @@ export class NgFormsManager<FormsState = any> {
       );
   }
 
-  // TODO: _AbstractControl should take a generic that should type the `value` property
-  getControl(formName: keyof FormsState, path?: string): _AbstractControl {
+  getControl<T = any>(formName: keyof FormsState, path?: string): _AbstractControl<T> {
     if (!path) {
-      return this.getForm(formName);
+      return this.getForm(formName) as any;
     }
 
     if (this.hasForm(formName)) {
@@ -69,11 +73,10 @@ export class NgFormsManager<FormsState = any> {
     return null;
   }
 
-  // TODO: _AbstractControl should take a generic that should type the `value` property
-  selectForm(
-    formName: keyof FormsState,
+  selectForm<T extends keyof FormsState>(
+    formName: T,
     options: { filterNil: true } = { filterNil: true }
-  ): Observable<AbstractGroup> {
+  ): Observable<AbstractGroup<FormsState[T]>> {
     return this.store
       .select(state => state[formName as any])
       .pipe(options.filterNil ? filterNil : s => s);
@@ -98,31 +101,31 @@ export class NgFormsManager<FormsState = any> {
       arrControlFactory?: ControlFactory | HashMap<ControlFactory>;
     } = {}
   ) {
-    const merged = this.config.merge(config) as Config & { arrControlFactory; persistState };
+    const mergedConfig = this.config.merge(config) as Config & { arrControlFactory; persistState };
     if (isBrowser() && config.persistState && this.hasForm(formName) === false) {
-      const storageValue = this.getFromStorage(merged.storage.key);
+      const storageValue = this.getFromStorage(mergedConfig.storage.key);
       if (storageValue[formName]) {
         this.store.update({
-          [formName]: storageValue[formName],
+          [formName]: mergeDeep(this.buildFormStoreState(formName, form), storageValue[formName]),
         } as Partial<FormsState>);
       }
     }
 
     /** If the form already exist, patch the form with the store value */
     if (this.hasForm(formName) === true) {
-      form.patchValue(this.resolveStoreToForm(formName, form, merged.arrControlFactory), {
+      form.patchValue(this.resolveStoreToForm(formName, form, mergedConfig.arrControlFactory), {
         emitEvent: false,
       });
     } else {
       const value = this.updateStore(formName, form);
-      this.updateStorage(formName, value, merged);
+      this.updateStorage(formName, value, mergedConfig);
     }
 
     const unsubscribe = merge(form.valueChanges, form.statusChanges.pipe(distinctUntilChanged()))
-      .pipe(debounceTime(merged.debounceTime))
+      .pipe(debounceTime(mergedConfig.debounceTime))
       .subscribe(() => {
         const value = this.updateStore(formName, form);
-        this.updateStorage(formName, value, merged);
+        this.updateStorage(formName, value, mergedConfig);
       });
 
     this.valueChanges.set(formName, unsubscribe);
@@ -131,13 +134,27 @@ export class NgFormsManager<FormsState = any> {
     return this;
   }
 
-  patchValue(formName: keyof FormsState, value: any, options) {
+  patchValue<T extends keyof FormsState>(
+    formName: T,
+    value: Partial<FormsState[T]>,
+    options?: {
+      onlySelf?: boolean;
+      emitEvent?: boolean;
+    }
+  ) {
     if (this.instances.has(formName)) {
       this.instances.get(formName).patchValue(value, options);
     }
   }
 
-  setValue(formName: keyof FormsState, value: any, options) {
+  setValue<T extends keyof FormsState>(
+    formName: keyof FormsState,
+    value: FormsState[T],
+    options?: {
+      onlySelf?: boolean;
+      emitEvent?: boolean;
+    }
+  ) {
     if (this.instances.has(formName)) {
       this.instances.get(formName).setValue(value, options);
     }

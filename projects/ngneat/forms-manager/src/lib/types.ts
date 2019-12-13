@@ -1,19 +1,11 @@
 import { AbstractControl } from '@angular/forms';
 
-export type _AbstractControl = Pick<
+export type _AbstractControl<T = any> = Pick<
   AbstractControl,
-  | 'value'
-  | 'valid'
-  | 'invalid'
-  | 'disabled'
-  | 'errors'
-  | 'touched'
-  | 'pristine'
-  | 'pending'
-  | 'dirty'
-> & { rawValue: any };
+  'valid' | 'invalid' | 'disabled' | 'errors' | 'touched' | 'pristine' | 'pending' | 'dirty'
+> & { rawValue: T; value: T };
 
-export interface AbstractGroup<C = any> extends _AbstractControl {
+export interface AbstractGroup<C = any> extends _AbstractControl<C> {
   controls: { readonly [P in keyof C]: _AbstractControl };
 }
 
