@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/ngneat/forms-manager/compare/v1.0.2...v1.1.0) (2019-12-17)
+
+### Features
+
+- **api:** change the api to be more angularish ([adbe550](https://github.com/ngneat/forms-manager/commit/adbe550e57235a0d33d78c17295b1719c5b0f303))
+
 ### [1.0.2](https://github.com/ngneat/forms-manager/compare/v1.0.1...v1.0.2) (2019-12-13)
 
 ### Bug Fixes
