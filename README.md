@@ -16,6 +16,7 @@
 
 ## 🔮 Features
 
+✅ Allows Typed Forms!<br>
 ✅ Auto persists the form's state upon user navigation.<br>
 ✅ Provides an API to reactively querying any form, from anywhere. <br>
 ✅ Persist the form's state to local storage.
@@ -55,6 +56,9 @@ import { NgFormsManager } from '@ngneat/forms-manager';
   `
 })
 export class OnboardingComponent {
+
+  onboardingForm: FormGroup;
+
   constructor(
     private formsManager: NgFormsManager,
     private builder: FormBuilder
@@ -247,7 +251,7 @@ export class HomeComponent{
 
 ## Using FormArray Controls
 
-When working with a `FormArray`, it's required to pass a `factory` function that instruct how to create the `controls` inside the `FormArray`. For example:
+When working with a `FormArray`, it's required to pass a `factory` function that defines how to create the `controls` inside the `FormArray`. For example:
 
 ```ts
 import { NgFormsManager } from '@ngneat/forms-manager';
