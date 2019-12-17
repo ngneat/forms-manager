@@ -87,56 +87,56 @@ With this setup, you’ll have an extensive API to query the store and update th
 
 ## API
 
-- `selectValid()` - Whether the control is valid
+- `valueChanges()` - Observe the control's value
 
 ```ts
-const isFormValid$ = formsManager.selectValid('onboarding');
-const isNameValid$ = formsManager.selectValid('onboarding', 'name');
+const value$ = formsManager.valueChanges('onboarding');
+const nameValue$ = formsManager.valueChanges<string>('onboarding', 'name');
 ```
 
-- `selectDirty()` - Whether the control is dirty
+- `validityChanges()` - Whether the control is valid
 
 ```ts
-const isFormDirty$ = formsManager.selectDirty('onboarding');
-const isNameDirty$ = formsManager.selectDirty('onboarding', 'name');
+const valid$ = formsManager.validityChanges('onboarding');
+const nameValid$ = formsManager.validityChanges('onboarding', 'name');
 ```
 
-- `selectDisabled()` - Whether the control is disabled
+- `dirtyChanges()` - Whether the control is dirty
 
 ```ts
-const isFormDisabled$ = formsManager.selectDisabled('onboarding');
-const isNameDisabled$ = formsManager.selectDisabled('onboarding', 'name');
+const dirty$ = formsManager.dirtyChanges('onboarding');
+const nameDirty$ = formsManager.dirtyChanges('onboarding', 'name');
 ```
 
-- `selectValue()` - Observe the control's value
+- `disableChanges()` - Whether the control is disabled
 
 ```ts
-const value$ = formsManager.selectValue('onboarding');
-const nameValue$ = formsManager.selectValue<string>('onboarding', 'name');
+const disabled$ = formsManager.disableChanges('onboarding');
+const nameDisabled$ = formsManager.disableChanges('onboarding', 'name');
 ```
 
-- `selectErrors()` - Observe the control's errors
+- `errorsChanges()` - Observe the control's errors
 
 ```ts
-const errors$ = formsManager.selectErrors('onboarding');
-const nameErros$ = formsManager.selectErrors('onboarding', 'name');
+const errors$ = formsManager.errorsChanges<Errors>('onboarding');
+const nameErros$ = formsManager.errorsChanges<Errors>('onboarding', 'name');
 ```
 
-- `selectControl()` - Observe the control's state
+- `controlChanges()` - Observe the control's state
 
 ```ts
-const control$ = formsManager.selectControl('onboarding');
-const nameControl$ = formsManager.selectControl('onboarding', 'name');
+const control$ = formsManager.controlChanges('onboarding');
+const nameControl$ = formsManager.controlChanges<string>('onboarding', 'name');
 ```
 
 - `getControl()` - Get the control's state
 
 ```ts
 const control = formsManager.getControl('onboarding');
-const nameControl = formsManager.getControl('onboarding', 'name');
+const nameControl = formsManager.getControl<string>('onboarding', 'name');
 ```
 
-`selectControl` and `getControl` will return the following state:
+`controlChanges` and `getControl` will return the following state:
 
 ```ts
 {
@@ -151,18 +151,6 @@ const nameControl = formsManager.getControl('onboarding', 'name');
    pristine: boolean,
    pending: boolean,
 }
-```
-
-- `selectForm()` - Observe the form's state
-
-```ts
-const form$ = formsManager.selectForm('onboarding');
-```
-
-- `getForm()` - Get the form's state
-
-```ts
-const form = formsManager.getForm('onboarding');
 ```
 
 - `hasForm()` - Whether the form exists
@@ -202,6 +190,12 @@ formsManager.clear();
 ```ts
 formsManager.destroy('onboarding');
 formsManager.destroy();
+```
+
+- `controlDestroyed()` - Emits when the control is destroyed
+
+```ts
+formsManager.controlChanges('login').pipe(takeUntil(controlDestroyed('login')));
 ```
 
 ## Persist to Local Storage
@@ -304,7 +298,7 @@ export class OnboardingComponent {
   constructor(private formsManager: NgFormsManager<AppForms>, private builder: FormBuilder) {}
 
   ngOnInit() {
-    this.formsManager.selectValue('onboarding').subscribe(value => {
+    this.formsManager.valueChanges('onboarding').subscribe(value => {
       // value now typed as AppForms['onboarding']
     });
   }

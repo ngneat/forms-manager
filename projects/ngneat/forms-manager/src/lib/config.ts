@@ -20,6 +20,7 @@ export function mergeConfig(
   inlineConfig: Partial<Config>
 ) {
   return {
+    ...defaults,
     storage: {
       ...defaults.storage,
       ...providerConfig.storage,

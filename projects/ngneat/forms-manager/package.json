@@ -21,8 +21,5 @@
     "name": "Netanel Basal",
     "email": "netanel7799@gmail.com",
     "url": "https://netbasal.com"
-  },
-  "dependencies": {
-    "lodash.isequal": "^4.5.0"
   }
 }

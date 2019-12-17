@@ -1,0 +1,26 @@
+<div class="container" style="margin-top: 30px;">
+  <div class="form-group">
+    <label>Name</label>
+    <input class="form-control" [formControl]="name" />
+  </div>
+  <code> {{ name.value }}</code>
+
+  <hr />
+
+  <h4>Group:</h4>
+  <form class="form-group" [formGroup]="login">
+    <div class="form-group">
+      <label>Email address</label>
+      <input type="email" class="form-control" formControlName="email" />
+    </div>
+
+    <button class="btn btn-info btn-sm" (click)="addSkill()">Add Skill</button>
+    <ng-container formArrayName="skills">
+      <div class="form-group" *ngFor="let _ of login.get('skills').controls; index as i">
+        <input class="form-control" [formControlName]="i" />
+      </div>
+    </ng-container>
+  </form>
+  <code> {{ login.value | json }}</code>
+  <code> {{ login.valid }}</code>
+</div>

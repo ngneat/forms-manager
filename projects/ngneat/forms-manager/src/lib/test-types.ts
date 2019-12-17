@@ -21,54 +21,54 @@ const formTwo = new FormGroup({
 manager.upsert('formOne', formOne);
 manager.upsert('formTwo', formTwo);
 
-manager.selectValid('formOne').subscribe(isValid => {
+manager.validityChanges('formOne').subscribe(isValid => {
   // infer boolean
 });
-manager.selectDirty('formOne').subscribe(isDirty => {
+manager.dirtyChanges('formOne').subscribe(isDirty => {
   // infer boolean
 });
-manager.selectDisabled('formOne').subscribe(isDisabled => {
+manager.disableChanges('formOne').subscribe(isDisabled => {
   // infer boolean
 });
-manager.selectValue('formOne').subscribe(value => {
+manager.valueChanges('formOne').subscribe(value => {
   // infer string
   value.toLowerCase();
 });
 
-manager.selectValue('formTwo').subscribe(group => {
+manager.valueChanges('formTwo').subscribe(group => {
   // infer { name: string, age: number }
   group.name;
   group.age;
 });
 
-manager.selectValue<string>('formTwo', 'name').subscribe(name => {
+manager.valueChanges<string>('formTwo', 'name').subscribe(name => {
   name.toLowerCase();
 });
 
-manager.selectControl('formOne').subscribe(control => {
+manager.controlChanges('formOne').subscribe(control => {
   // infer to string
   control.value.toLowerCase();
 });
 
-manager.selectControl<AppForms['formTwo']>('formTwo').subscribe(group => {
+manager.controlChanges('formTwo').subscribe(group => {
   // infer { name: string, age: number }
   group.value.age;
   group.value.name;
 });
 
-manager.selectControl<string>('formTwo', 'name').subscribe(nameControl => {
+manager.controlChanges<string>('formTwo', 'name').subscribe(nameControl => {
   console.log(nameControl.value);
 });
 
-manager.selectForm('formOne').subscribe(control => {
+manager.controlChanges('formOne').subscribe(control => {
   // infer to string
   control.value.toLowerCase();
 });
 
-manager.selectForm('formTwo').subscribe(form => {
+manager.controlChanges('formTwo').subscribe(control => {
   // infer { name: string, age: number }
-  form.value.name;
-  form.value.age;
+  control.value.name;
+  control.value.age;
 });
 
 manager.patchValue('formOne', '');

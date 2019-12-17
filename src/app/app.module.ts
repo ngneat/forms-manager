@@ -3,12 +3,13 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { DemoComponent } from './demo/demo.component';
+import { FormsComponent } from './forms/forms.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NG_FORMS_MANAGER_CONFIG, NgFormsManagerConfig } from '@ngneat/forms-manager';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
-  declarations: [AppComponent, DemoComponent],
+  declarations: [AppComponent, FormsComponent, HomeComponent],
   imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule],
   providers: [
     // {

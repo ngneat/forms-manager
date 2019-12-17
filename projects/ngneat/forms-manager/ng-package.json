@@ -4,5 +4,5 @@
   "lib": {
     "entryFile": "src/public_api.ts"
   },
-  "whitelistedNonPeerDependencies": ["lodash.isequal"]
+  "whitelistedNonPeerDependencies": ["fast-deep-equal"]
 }

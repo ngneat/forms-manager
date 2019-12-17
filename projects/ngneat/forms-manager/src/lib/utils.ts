@@ -42,21 +42,29 @@ const removeKeys = [
   'pristine',
   'touched',
   'valid',
-  'rawValue',
 ];
 
 export function filterControlKeys(value) {
   return filterKeys(value, key => removeKeys.includes(key));
 }
 
-export function filterKeys(obj, cb) {
+function filtrArrayKeys(arr: any[], cb) {
+  return arr.reduce((acc, control, index) => {
+    acc[index] = filterKeys(control, cb);
+    return acc;
+  }, []);
+}
+
+function filterKeys(obj, cb) {
   const filtered = {};
 
   for (const key of Object.keys(obj)) {
     const value = obj[key];
     if (cb(key) === false) {
       if (isObject(value)) {
-        filtered[key] = filterKeys(obj[key], cb);
+        filtered[key] = filterKeys(value, cb);
+      } else if (Array.isArray(value) && key === 'controls') {
+        filtered[key] = filtrArrayKeys(value, cb);
       } else {
         filtered[key] = value;
       }

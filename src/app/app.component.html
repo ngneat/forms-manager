@@ -1,4 +1,20 @@
-<button routerLink="demo">Demo Page</button>
-<button routerLink="">Home</button>
-
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" routerLink="">Forms Manager</a>
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          routerLink=""
+          >Home</a
+        >
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLinkActive="active" routerLink="forms">Forms</a>
+      </li>
+    </ul>
+  </div>
+</nav>
 <router-outlet></router-outlet>

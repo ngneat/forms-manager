@@ -36,7 +36,7 @@ describe('FormsManager', () => {
     formsManager = null;
   });
 
-  it('should update the store with forms value', fakeAsync(() => {
+  fit('should update the store with forms value', fakeAsync(() => {
     expect(getSnapshot(formsManager)).toEqual({
       config: {
         value: '',
@@ -61,7 +61,7 @@ describe('FormsManager', () => {
         touched: false,
         pristine: true,
         pending: false,
-        controls: {},
+        controls: [],
       },
       group: {
         value: {
@@ -160,6 +160,7 @@ describe('FormsManager', () => {
             },
           },
           arr: {
+            controls: [],
             value: [],
             rawValue: [],
             valid: true,
@@ -200,7 +201,7 @@ describe('FormsManager', () => {
         touched: false,
         pristine: true,
         pending: false,
-        controls: {},
+        controls: [],
       },
       group: {
         value: {
@@ -299,6 +300,7 @@ describe('FormsManager', () => {
             },
           },
           arr: {
+            controls: [],
             value: [],
             rawValue: [],
             valid: true,
@@ -340,8 +342,8 @@ describe('FormsManager', () => {
         touched: false,
         pristine: true,
         pending: false,
-        controls: {
-          '0': {
+        controls: [
+          {
             value: 'One',
             rawValue: null,
             valid: true,
@@ -353,7 +355,7 @@ describe('FormsManager', () => {
             pristine: true,
             pending: false,
           },
-          '1': {
+          {
             value: 'Two',
             rawValue: null,
             valid: true,
@@ -365,7 +367,7 @@ describe('FormsManager', () => {
             pristine: true,
             pending: false,
           },
-        },
+        ],
       },
       group: {
         value: {
@@ -464,6 +466,7 @@ describe('FormsManager', () => {
             },
           },
           arr: {
+            controls: [],
             value: [],
             rawValue: [],
             valid: true,
@@ -513,8 +516,8 @@ describe('FormsManager', () => {
         touched: false,
         pristine: true,
         pending: false,
-        controls: {
-          '0': {
+        controls: [
+          {
             value: 'One',
             rawValue: null,
             valid: true,
@@ -526,7 +529,7 @@ describe('FormsManager', () => {
             pristine: true,
             pending: false,
           },
-          '1': {
+          {
             value: 'Two',
             rawValue: null,
             valid: true,
@@ -538,7 +541,7 @@ describe('FormsManager', () => {
             pristine: true,
             pending: false,
           },
-        },
+        ],
       },
       group: {
         value: {
@@ -637,6 +640,32 @@ describe('FormsManager', () => {
             },
           },
           arr: {
+            controls: [
+              {
+                value: 'One',
+                rawValue: null,
+                valid: true,
+                dirty: false,
+                invalid: false,
+                disabled: false,
+                errors: null,
+                touched: false,
+                pristine: true,
+                pending: false,
+              },
+              {
+                value: 'Two',
+                rawValue: null,
+                valid: true,
+                dirty: false,
+                invalid: false,
+                disabled: false,
+                errors: null,
+                touched: false,
+                pristine: true,
+                pending: false,
+              },
+            ],
             value: ['One', 'Two'],
             rawValue: ['One', 'Two'],
             valid: true,
@@ -655,7 +684,7 @@ describe('FormsManager', () => {
 
   it('should listen to changes - control', fakeAsync(() => {
     const spy = jasmine.createSpy('config control');
-    formsManager.selectControl('config').subscribe(spy);
+    formsManager.controlChanges('config').subscribe(spy);
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith({
       value: '',
@@ -686,626 +715,9 @@ describe('FormsManager', () => {
     });
   }));
 
-  it('should update the store with forms value', fakeAsync(() => {
-    expect(getSnapshot(formsManager)).toEqual({
-      config: {
-        value: '',
-        rawValue: null,
-        valid: false,
-        dirty: false,
-        invalid: true,
-        disabled: false,
-        errors: { required: true },
-        touched: false,
-        pristine: true,
-        pending: false,
-      },
-      arr: {
-        value: [],
-        rawValue: [],
-        valid: true,
-        dirty: false,
-        invalid: false,
-        disabled: false,
-        errors: null,
-        touched: false,
-        pristine: true,
-        pending: false,
-        controls: {},
-      },
-      group: {
-        value: {
-          name: null,
-          email: null,
-          phone: {
-            number: null,
-            prefix: null,
-          },
-          arr: [],
-        },
-        rawValue: {
-          name: null,
-          email: null,
-          phone: {
-            number: null,
-            prefix: null,
-          },
-          arr: [],
-        },
-        valid: true,
-        dirty: false,
-        invalid: false,
-        disabled: false,
-        errors: null,
-        touched: false,
-        pristine: true,
-        pending: false,
-        controls: {
-          name: {
-            value: null,
-            rawValue: null,
-            valid: true,
-            dirty: false,
-            invalid: false,
-            disabled: false,
-            errors: null,
-            touched: false,
-            pristine: true,
-            pending: false,
-          },
-          email: {
-            value: null,
-            rawValue: null,
-            valid: true,
-            dirty: false,
-            invalid: false,
-            disabled: false,
-            errors: null,
-            touched: false,
-            pristine: true,
-            pending: false,
-          },
-          phone: {
-            value: {
-              number: null,
-              prefix: null,
-            },
-            rawValue: {
-              number: null,
-              prefix: null,
-            },
-            valid: true,
-            dirty: false,
-            invalid: false,
-            disabled: false,
-            errors: null,
-            touched: false,
-            pristine: true,
-            pending: false,
-            controls: {
-              number: {
-                value: null,
-                rawValue: null,
-                valid: true,
-                dirty: false,
-                invalid: false,
-                disabled: false,
-                errors: null,
-                touched: false,
-                pristine: true,
-                pending: false,
-              },
-              prefix: {
-                value: null,
-                rawValue: null,
-                valid: true,
-                dirty: false,
-                invalid: false,
-                disabled: false,
-                errors: null,
-                touched: false,
-                pristine: true,
-                pending: false,
-              },
-            },
-          },
-          arr: {
-            value: [],
-            rawValue: [],
-            valid: true,
-            dirty: false,
-            invalid: false,
-            disabled: false,
-            errors: null,
-            touched: false,
-            pristine: true,
-            pending: false,
-          },
-        },
-      },
-    });
-    control.patchValue('New value');
-    tick(301);
-    expect(getSnapshot(formsManager)).toEqual({
-      config: {
-        value: 'New value',
-        rawValue: null,
-        valid: true,
-        dirty: false,
-        invalid: false,
-        disabled: false,
-        errors: null,
-        touched: false,
-        pristine: true,
-        pending: false,
-      },
-      arr: {
-        value: [],
-        rawValue: [],
-        valid: true,
-        dirty: false,
-        invalid: false,
-        disabled: false,
-        errors: null,
-        touched: false,
-        pristine: true,
-        pending: false,
-        controls: {},
-      },
-      group: {
-        value: {
-          name: null,
-          email: null,
-          phone: {
-            number: null,
-            prefix: null,
-          },
-          arr: [],
-        },
-        rawValue: {
-          name: null,
-          email: null,
-          phone: {
-            number: null,
-            prefix: null,
-          },
-          arr: [],
-        },
-        valid: true,
-        dirty: false,
-        invalid: false,
-        disabled: false,
-        errors: null,
-        touched: false,
-        pristine: true,
-        pending: false,
-        controls: {
-          name: {
-            value: null,
-            rawValue: null,
-            valid: true,
-            dirty: false,
-            invalid: false,
-            disabled: false,
-            errors: null,
-            touched: false,
-            pristine: true,
-            pending: false,
-          },
-          email: {
-            value: null,
-            rawValue: null,
-            valid: true,
-            dirty: false,
-            invalid: false,
-            disabled: false,
-            errors: null,
-            touched: false,
-            pristine: true,
-            pending: false,
-          },
-          phone: {
-            value: {
-              number: null,
-              prefix: null,
-            },
-            rawValue: {
-              number: null,
-              prefix: null,
-            },
-            valid: true,
-            dirty: false,
-            invalid: false,
-            disabled: false,
-            errors: null,
-            touched: false,
-            pristine: true,
-            pending: false,
-            controls: {
-              number: {
-                value: null,
-                rawValue: null,
-                valid: true,
-                dirty: false,
-                invalid: false,
-                disabled: false,
-                errors: null,
-                touched: false,
-                pristine: true,
-                pending: false,
-              },
-              prefix: {
-                value: null,
-                rawValue: null,
-                valid: true,
-                dirty: false,
-                invalid: false,
-                disabled: false,
-                errors: null,
-                touched: false,
-                pristine: true,
-                pending: false,
-              },
-            },
-          },
-          arr: {
-            value: [],
-            rawValue: [],
-            valid: true,
-            dirty: false,
-            invalid: false,
-            disabled: false,
-            errors: null,
-            touched: false,
-            pristine: true,
-            pending: false,
-          },
-        },
-      },
-    });
-    arr.push(new FormControl('One'));
-    arr.push(new FormControl('Two'));
-    tick(301);
-    expect(getSnapshot(formsManager)).toEqual({
-      config: {
-        value: 'New value',
-        rawValue: null,
-        valid: true,
-        dirty: false,
-        invalid: false,
-        disabled: false,
-        errors: null,
-        touched: false,
-        pristine: true,
-        pending: false,
-      },
-      arr: {
-        value: ['One', 'Two'],
-        rawValue: ['One', 'Two'],
-        valid: true,
-        dirty: false,
-        invalid: false,
-        disabled: false,
-        errors: null,
-        touched: false,
-        pristine: true,
-        pending: false,
-        controls: {
-          '0': {
-            value: 'One',
-            rawValue: null,
-            valid: true,
-            dirty: false,
-            invalid: false,
-            disabled: false,
-            errors: null,
-            touched: false,
-            pristine: true,
-            pending: false,
-          },
-          '1': {
-            value: 'Two',
-            rawValue: null,
-            valid: true,
-            dirty: false,
-            invalid: false,
-            disabled: false,
-            errors: null,
-            touched: false,
-            pristine: true,
-            pending: false,
-          },
-        },
-      },
-      group: {
-        value: {
-          name: null,
-          email: null,
-          phone: {
-            number: null,
-            prefix: null,
-          },
-          arr: [],
-        },
-        rawValue: {
-          name: null,
-          email: null,
-          phone: {
-            number: null,
-            prefix: null,
-          },
-          arr: [],
-        },
-        valid: true,
-        dirty: false,
-        invalid: false,
-        disabled: false,
-        errors: null,
-        touched: false,
-        pristine: true,
-        pending: false,
-        controls: {
-          name: {
-            value: null,
-            rawValue: null,
-            valid: true,
-            dirty: false,
-            invalid: false,
-            disabled: false,
-            errors: null,
-            touched: false,
-            pristine: true,
-            pending: false,
-          },
-          email: {
-            value: null,
-            rawValue: null,
-            valid: true,
-            dirty: false,
-            invalid: false,
-            disabled: false,
-            errors: null,
-            touched: false,
-            pristine: true,
-            pending: false,
-          },
-          phone: {
-            value: {
-              number: null,
-              prefix: null,
-            },
-            rawValue: {
-              number: null,
-              prefix: null,
-            },
-            valid: true,
-            dirty: false,
-            invalid: false,
-            disabled: false,
-            errors: null,
-            touched: false,
-            pristine: true,
-            pending: false,
-            controls: {
-              number: {
-                value: null,
-                rawValue: null,
-                valid: true,
-                dirty: false,
-                invalid: false,
-                disabled: false,
-                errors: null,
-                touched: false,
-                pristine: true,
-                pending: false,
-              },
-              prefix: {
-                value: null,
-                rawValue: null,
-                valid: true,
-                dirty: false,
-                invalid: false,
-                disabled: false,
-                errors: null,
-                touched: false,
-                pristine: true,
-                pending: false,
-              },
-            },
-          },
-          arr: {
-            value: [],
-            rawValue: [],
-            valid: true,
-            dirty: false,
-            invalid: false,
-            disabled: false,
-            errors: null,
-            touched: false,
-            pristine: true,
-            pending: false,
-          },
-        },
-      },
-    });
-    group.patchValue({
-      name: 'Netanel',
-      email: 'n@n.com',
-      phone: {
-        number: 1,
-        prefix: 2,
-      },
-    });
-    (group.get('arr') as FormArray).push(new FormControl('One'));
-    (group.get('arr') as FormArray).push(new FormControl('Two'));
-    tick(301);
-    expect(getSnapshot(formsManager)).toEqual({
-      config: {
-        value: 'New value',
-        rawValue: null,
-        valid: true,
-        dirty: false,
-        invalid: false,
-        disabled: false,
-        errors: null,
-        touched: false,
-        pristine: true,
-        pending: false,
-      },
-      arr: {
-        value: ['One', 'Two'],
-        rawValue: ['One', 'Two'],
-        valid: true,
-        dirty: false,
-        invalid: false,
-        disabled: false,
-        errors: null,
-        touched: false,
-        pristine: true,
-        pending: false,
-        controls: {
-          '0': {
-            value: 'One',
-            rawValue: null,
-            valid: true,
-            dirty: false,
-            invalid: false,
-            disabled: false,
-            errors: null,
-            touched: false,
-            pristine: true,
-            pending: false,
-          },
-          '1': {
-            value: 'Two',
-            rawValue: null,
-            valid: true,
-            dirty: false,
-            invalid: false,
-            disabled: false,
-            errors: null,
-            touched: false,
-            pristine: true,
-            pending: false,
-          },
-        },
-      },
-      group: {
-        value: {
-          name: 'Netanel',
-          email: 'n@n.com',
-          phone: {
-            number: 1,
-            prefix: 2,
-          },
-          arr: ['One', 'Two'],
-        },
-        rawValue: {
-          name: 'Netanel',
-          email: 'n@n.com',
-          phone: {
-            number: 1,
-            prefix: 2,
-          },
-          arr: ['One', 'Two'],
-        },
-        valid: true,
-        dirty: false,
-        invalid: false,
-        disabled: false,
-        errors: null,
-        touched: false,
-        pristine: true,
-        pending: false,
-        controls: {
-          name: {
-            value: 'Netanel',
-            rawValue: null,
-            valid: true,
-            dirty: false,
-            invalid: false,
-            disabled: false,
-            errors: null,
-            touched: false,
-            pristine: true,
-            pending: false,
-          },
-          email: {
-            value: 'n@n.com',
-            rawValue: null,
-            valid: true,
-            dirty: false,
-            invalid: false,
-            disabled: false,
-            errors: null,
-            touched: false,
-            pristine: true,
-            pending: false,
-          },
-          phone: {
-            value: {
-              number: 1,
-              prefix: 2,
-            },
-            rawValue: {
-              number: 1,
-              prefix: 2,
-            },
-            valid: true,
-            dirty: false,
-            invalid: false,
-            disabled: false,
-            errors: null,
-            touched: false,
-            pristine: true,
-            pending: false,
-            controls: {
-              number: {
-                value: 1,
-                rawValue: null,
-                valid: true,
-                dirty: false,
-                invalid: false,
-                disabled: false,
-                errors: null,
-                touched: false,
-                pristine: true,
-                pending: false,
-              },
-              prefix: {
-                value: 2,
-                rawValue: null,
-                valid: true,
-                dirty: false,
-                invalid: false,
-                disabled: false,
-                errors: null,
-                touched: false,
-                pristine: true,
-                pending: false,
-              },
-            },
-          },
-          arr: {
-            value: ['One', 'Two'],
-            rawValue: ['One', 'Two'],
-            valid: true,
-            dirty: false,
-            invalid: false,
-            disabled: false,
-            errors: null,
-            touched: false,
-            pristine: true,
-            pending: false,
-          },
-        },
-      },
-    });
-  }));
-
   it('should listen to changes - control', fakeAsync(() => {
     const spy = jasmine.createSpy('config control');
-    formsManager.selectControl('config').subscribe(spy);
+    formsManager.controlChanges('config').subscribe(spy);
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith({
       value: '',
@@ -1338,7 +750,7 @@ describe('FormsManager', () => {
 
   it('should listen to changes - group', fakeAsync(() => {
     const spy = jasmine.createSpy('group control');
-    formsManager.selectControl('group').subscribe(spy);
+    formsManager.controlChanges('group').subscribe(spy);
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith({
       value: {
@@ -1437,6 +849,7 @@ describe('FormsManager', () => {
           },
         },
         arr: {
+          controls: [],
           value: [],
           rawValue: [],
           valid: true,
@@ -1555,6 +968,7 @@ describe('FormsManager', () => {
           },
         },
         arr: {
+          controls: [],
           value: [],
           rawValue: [],
           valid: true,
@@ -1572,7 +986,7 @@ describe('FormsManager', () => {
 
   it('should select the form', () => {
     const spy = jasmine.createSpy('select form');
-    formsManager.selectForm('config').subscribe(spy);
+    formsManager.controlChanges('config').subscribe(spy);
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith({
       value: '',
@@ -1592,7 +1006,7 @@ describe('FormsManager', () => {
 
   it('should subscribe to validity', fakeAsync(() => {
     const spy = jasmine.createSpy('select form');
-    formsManager.selectValid('config').subscribe(spy);
+    formsManager.validityChanges('config').subscribe(spy);
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(false);
     control.patchValue('Valid!');
@@ -1607,7 +1021,7 @@ describe('FormsManager', () => {
 
   it('should subscribe to errors', fakeAsync(() => {
     const spy = jasmine.createSpy('select form errors');
-    formsManager.selectErrors('config').subscribe(spy);
+    formsManager.errorsChanges('config').subscribe(spy);
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith({ required: true });
     control.patchValue('Valid!');
@@ -1622,7 +1036,7 @@ describe('FormsManager', () => {
 
   it('should subscribe to errors inside group', fakeAsync(() => {
     const spy = jasmine.createSpy('select form group control errors');
-    formsManager.selectErrors('group', 'phone.number').subscribe(spy);
+    formsManager.errorsChanges('group', 'phone.number').subscribe(spy);
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(null);
     group.get('phone.number').setValidators(Validators.required);
@@ -1644,8 +1058,8 @@ describe('FormsManager', () => {
     const spyPrefix = jasmine.createSpy('prefix');
     const spyEmail = jasmine.createSpy('email');
 
-    formsManager.selectValue('group', 'phone.prefix').subscribe(spyPrefix);
-    formsManager.selectValue('group', 'email').subscribe(spyEmail);
+    formsManager.valueChanges('group', 'phone.prefix').subscribe(spyPrefix);
+    formsManager.valueChanges('group', 'email').subscribe(spyEmail);
 
     expect(spyPrefix).toHaveBeenCalledTimes(1);
     expect(spyPrefix).toHaveBeenCalledWith(null);
@@ -1669,7 +1083,7 @@ describe('FormsManager', () => {
   it('should subscribe to value - form array', fakeAsync(() => {
     const spy = jasmine.createSpy('array');
 
-    formsManager.selectValue('group', 'arr').subscribe(spy);
+    formsManager.valueChanges('group', 'arr').subscribe(spy);
 
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith([]);
