@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/ngneat/forms-manager/compare/v2.0.0...v2.1.0) (2019-12-22)
+
+### Features
+
+- **lib:** add dirty functionality ([701ccef](https://github.com/ngneat/forms-manager/commit/701ccef119afa9690510d385138d5016dda55bbb))
+
 ## [1.1.0](https://github.com/ngneat/forms-manager/compare/v1.0.2...v1.1.0) (2019-12-17)
 
 ### Features
