@@ -1,10 +1,10 @@
 import { Inject, Injectable, Optional } from '@angular/core';
-import { AbstractControl, Form } from '@angular/forms';
-import { coerceArray, filterControlKeys, filterNil, isBrowser, mergeDeep } from './utils';
+import { AbstractControl } from '@angular/forms';
+import { coerceArray, filterControlKeys, filterNil, isBrowser, isObject, mergeDeep } from './utils';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { FormsStore } from './forms-manager.store';
-import { Control, ControlFactory, FormKeys, HashMap } from './types';
+import { Control, ControlFactory, FormKeys, HashMap, UpsertConfig } from './types';
 import { Config, NG_FORMS_MANAGER_CONFIG, NgFormsManagerConfig } from './config';
 import { isEqual } from './isEqual';
 import { deleteControl, findControl, handleFormArray, toStore } from './builders';
@@ -14,6 +14,7 @@ export class NgFormsManager<FormsState = any> {
   private readonly store: FormsStore<FormsState>;
   private valueChanges$$: Map<keyof FormsState, Subscription> = new Map();
   private instances$$: Map<keyof FormsState, AbstractControl> = new Map();
+  private initialValues$$: Map<keyof FormsState, any> = new Map();
   private destroy$$ = new Subject();
 
   constructor(@Optional() @Inject(NG_FORMS_MANAGER_CONFIG) private config: NgFormsManagerConfig) {
@@ -31,6 +32,19 @@ export class NgFormsManager<FormsState = any> {
    */
   validityChanges(name: keyof FormsState, path?: string): Observable<boolean> {
     return this.controlChanges(name, path).pipe(map(control => control.valid));
+  }
+
+  /**
+   *
+   * Whether the control is valid
+   *
+   * @example
+   *
+   * manager.isValid(name);
+   *
+   */
+  isValid(name: keyof FormsState) {
+    return this.hasControl(name) && this.getControl(name).valid;
   }
 
   /**
@@ -113,6 +127,25 @@ export class NgFormsManager<FormsState = any> {
     return control$.pipe(
       map(control => findControl(control, path)),
       distinctUntilChanged((a, b) => isEqual(a, b))
+    );
+  }
+
+  /**
+   *
+   * Whether the initial control value is deep equal to current value
+   *
+   * @example
+   *
+   * const dirty$ = manager.initialValueChanged('settings');
+   *
+   */
+  initialValueChanged(name: keyof FormsState): Observable<boolean> {
+    if (this.initialValues$$.has(name) === false) {
+      console.error(`You should set the withInitialValue option to the ${name} control`);
+    }
+
+    return this.valueChanges(name).pipe(
+      map(current => isEqual(current, this.initialValues$$.get(name)) === false)
     );
   }
 
@@ -216,6 +249,19 @@ export class NgFormsManager<FormsState = any> {
 
   /**
    *
+   * Sets the initial value for a control
+   *
+   * @example
+   *
+   * manager.setInitialValue('login', value);
+   *
+   */
+  setInitialValue(name: keyof FormsState, value: any) {
+    this.initialValues$$.set(name, value);
+  }
+
+  /**
+   *
    * @example
    *
    * manager.unsubscribe('login');
@@ -254,6 +300,7 @@ export class NgFormsManager<FormsState = any> {
   clear(name?: FormKeys<FormsState>) {
     name ? this.deleteControl(name) : this.store.set({} as FormsState);
     this.removeFromStorage();
+    this.removeInitialValue(name);
   }
 
   /**
@@ -283,16 +330,12 @@ export class NgFormsManager<FormsState = any> {
    * manager.upsert('login', this.login, { arrControlFactory: value => new FormControl('') });
    *
    */
-  upsert(
-    name: keyof FormsState,
-    control: AbstractControl,
-    config: {
-      persistState?: boolean;
-      debounceTime?: number;
-      arrControlFactory?: ControlFactory | HashMap<ControlFactory>;
-    } = {}
-  ) {
-    const mergedConfig = this.config.merge(config) as Config & { arrControlFactory; persistState };
+  upsert(name: keyof FormsState, control: AbstractControl, config: UpsertConfig = {}) {
+    const mergedConfig: Config & UpsertConfig = this.config.merge(config);
+
+    if (mergedConfig.withInitialValue && this.initialValues$$.has(name) === false) {
+      this.setInitialValue(name, control.value);
+    }
 
     if (isBrowser() && config.persistState && this.hasControl(name) === false) {
       const storageValue = this.getFromStorage(mergedConfig.storage.key);
@@ -373,5 +416,9 @@ export class NgFormsManager<FormsState = any> {
     } as any);
 
     return value;
+  }
+
+  private removeInitialValue(name: FormKeys<FormsState>) {
+    coerceArray(name).forEach(name => this.initialValues$$.delete(name));
   }
 }

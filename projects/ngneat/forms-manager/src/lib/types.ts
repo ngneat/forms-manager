@@ -12,3 +12,10 @@ export interface HashMap<T = any> {
 }
 
 export type FormKeys<FormsState> = keyof FormsState | (keyof FormsState)[];
+
+export interface UpsertConfig {
+  persistState?: boolean;
+  debounceTime?: number;
+  arrControlFactory?: ControlFactory | HashMap<ControlFactory>;
+  withInitialValue?: boolean;
+}

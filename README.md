@@ -19,7 +19,8 @@
 ✅ Allows Typed Forms!<br>
 ✅ Auto persists the form's state upon user navigation.<br>
 ✅ Provides an API to reactively querying any form, from anywhere. <br>
-✅ Persist the form's state to local storage.
+✅ Persist the form's state to local storage.<br>
+✅ Built-in dirty functionality.
 
 <hr />
 
@@ -282,7 +283,7 @@ export class HomeComponent {
 `NgFormsManager` can take a generic type where you can define the forms shape. For example:
 
 ```ts
-export interface AppForms = {
+interface AppForms = {
   onboarding: {
     name: string;
     age: number;
@@ -300,6 +301,51 @@ export class OnboardingComponent {
   ngOnInit() {
     this.formsManager.valueChanges('onboarding').subscribe(value => {
       // value now typed as AppForms['onboarding']
+    });
+  }
+}
+```
+
+Note that you can split the types across files using a definition file:
+
+```ts
+// login-form.d.ts
+interface AppForms {
+  login: {
+    email: string;
+    password: string
+  }
+}
+
+// onboarding.d.ts
+interface AppForms {
+  onboarding: {
+    ...
+  }
+}
+```
+
+## Using the Dirty Functionality
+
+The library provides built-in support for the common "Is the form dirty?" question. Dirty means that the current control's
+value is different from the initial value. It can be useful when we need to toggle the visibility of a "save" button or displaying a dialog when the user leaves the page.
+
+To start using it, you should set the `withInitialValue` option:
+
+```ts
+@Component({
+  template: `
+    <button *ngIf="isDirty$ | async">Save</button>
+  `,
+})
+export class SettingsComponent {
+  isDirty$ = this.formsManager.initialValueChanged(name);
+
+  constructor(private formsManager: NgFormsManager<AppForms>) {}
+
+  ngOnInit() {
+    this.formsManager.upsert(name, control, {
+      withInitialValue: true,
     });
   }
 }

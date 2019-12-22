@@ -18,8 +18,8 @@ const formTwo = new FormGroup({
   age: new FormControl(),
 });
 
-manager.upsert('formOne', formOne);
-manager.upsert('formTwo', formTwo);
+manager.upsert({ name: 'formOne', control: formOne });
+manager.upsert({ name: 'formTwo', control: formTwo });
 
 manager.validityChanges('formOne').subscribe(isValid => {
   // infer boolean
