@@ -68,7 +68,7 @@ export class OnboardingComponent {
   ngOnInit() {
     this.onboardingForm = this.builder.group({
       name: [null, Validators.required],
-      age:  [null, Validators.required]),
+      age:  [null, Validators.required],
       city: [null, Validators.required]
     });
 
