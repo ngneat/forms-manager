@@ -25,8 +25,12 @@ export function clone(value: any): any {
   return isObject(value) ? { ...value } : Array.isArray(value) ? [...value] : value;
 }
 
+export function isValidDate(value: any): boolean {
+  return value && Object.prototype.toString.call(value) === '[object Date]' && !isNaN(value);
+}
+
 export function isObject(val) {
-  if (val == null || Array.isArray(val)) {
+  if (val == null || Array.isArray(val) || isValidDate(val)) {
     return false;
   }
 
