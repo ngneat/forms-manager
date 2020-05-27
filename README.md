@@ -120,7 +120,7 @@ const nameDisabled$ = formsManager.disableChanges('onboarding', 'name');
 
 ```ts
 const errors$ = formsManager.errorsChanges<Errors>('onboarding');
-const nameErros$ = formsManager.errorsChanges<Errors>('onboarding', 'name');
+const nameErrors$ = formsManager.errorsChanges<Errors>('onboarding', 'name');
 ```
 
 - `controlChanges()` - Observe the control's state
