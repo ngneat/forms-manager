@@ -9,7 +9,11 @@ function getSnapshot(formsManager) {
 }
 
 describe('FormsManager', () => {
-  let formsManager: NgFormsManager, control: FormControl, arr: FormArray, group: FormGroup;
+  let formsManager: NgFormsManager,
+    control: FormControl,
+    arr: FormArray,
+    group: FormGroup,
+    date: Date;
 
   beforeEach(() => {
     formsManager = new NgFormsManager(new NgFormsManagerConfig());
@@ -18,12 +22,14 @@ describe('FormsManager', () => {
     group = new FormGroup({
       name: new FormControl(),
       email: new FormControl(),
+      date: new FormControl(),
       phone: new FormGroup({
         number: new FormControl(),
         prefix: new FormControl(),
       }),
       arr: new FormArray([]),
     });
+    date = new Date();
 
     formsManager
       .upsert('config', control)
@@ -67,6 +73,7 @@ describe('FormsManager', () => {
         value: {
           name: null,
           email: null,
+          date: null,
           phone: {
             number: null,
             prefix: null,
@@ -76,6 +83,7 @@ describe('FormsManager', () => {
         rawValue: {
           name: null,
           email: null,
+          date: null,
           phone: {
             number: null,
             prefix: null,
@@ -104,6 +112,18 @@ describe('FormsManager', () => {
             pending: false,
           },
           email: {
+            value: null,
+            rawValue: null,
+            valid: true,
+            dirty: false,
+            invalid: false,
+            disabled: false,
+            errors: null,
+            touched: false,
+            pristine: true,
+            pending: false,
+          },
+          date: {
             value: null,
             rawValue: null,
             valid: true,
@@ -207,6 +227,7 @@ describe('FormsManager', () => {
         value: {
           name: null,
           email: null,
+          date: null,
           phone: {
             number: null,
             prefix: null,
@@ -216,6 +237,7 @@ describe('FormsManager', () => {
         rawValue: {
           name: null,
           email: null,
+          date: null,
           phone: {
             number: null,
             prefix: null,
@@ -244,6 +266,18 @@ describe('FormsManager', () => {
             pending: false,
           },
           email: {
+            value: null,
+            rawValue: null,
+            valid: true,
+            dirty: false,
+            invalid: false,
+            disabled: false,
+            errors: null,
+            touched: false,
+            pristine: true,
+            pending: false,
+          },
+          date: {
             value: null,
             rawValue: null,
             valid: true,
@@ -373,6 +407,7 @@ describe('FormsManager', () => {
         value: {
           name: null,
           email: null,
+          date: null,
           phone: {
             number: null,
             prefix: null,
@@ -382,6 +417,7 @@ describe('FormsManager', () => {
         rawValue: {
           name: null,
           email: null,
+          date: null,
           phone: {
             number: null,
             prefix: null,
@@ -410,6 +446,18 @@ describe('FormsManager', () => {
             pending: false,
           },
           email: {
+            value: null,
+            rawValue: null,
+            valid: true,
+            dirty: false,
+            invalid: false,
+            disabled: false,
+            errors: null,
+            touched: false,
+            pristine: true,
+            pending: false,
+          },
+          date: {
             value: null,
             rawValue: null,
             valid: true,
@@ -484,6 +532,7 @@ describe('FormsManager', () => {
     group.patchValue({
       name: 'Netanel',
       email: 'n@n.com',
+      date: date,
       phone: {
         number: 1,
         prefix: 2,
@@ -547,6 +596,7 @@ describe('FormsManager', () => {
         value: {
           name: 'Netanel',
           email: 'n@n.com',
+          date: date,
           phone: {
             number: 1,
             prefix: 2,
@@ -556,6 +606,7 @@ describe('FormsManager', () => {
         rawValue: {
           name: 'Netanel',
           email: 'n@n.com',
+          date: date,
           phone: {
             number: 1,
             prefix: 2,
@@ -585,6 +636,18 @@ describe('FormsManager', () => {
           },
           email: {
             value: 'n@n.com',
+            rawValue: null,
+            valid: true,
+            dirty: false,
+            invalid: false,
+            disabled: false,
+            errors: null,
+            touched: false,
+            pristine: true,
+            pending: false,
+          },
+          date: {
+            value: date,
             rawValue: null,
             valid: true,
             dirty: false,
@@ -756,6 +819,7 @@ describe('FormsManager', () => {
       value: {
         name: null,
         email: null,
+        date: null,
         phone: {
           number: null,
           prefix: null,
@@ -765,6 +829,7 @@ describe('FormsManager', () => {
       rawValue: {
         name: null,
         email: null,
+        date: null,
         phone: {
           number: null,
           prefix: null,
@@ -793,6 +858,18 @@ describe('FormsManager', () => {
           pending: false,
         },
         email: {
+          value: null,
+          rawValue: null,
+          valid: true,
+          dirty: false,
+          invalid: false,
+          disabled: false,
+          errors: null,
+          touched: false,
+          pristine: true,
+          pending: false,
+        },
+        date: {
           value: null,
           rawValue: null,
           valid: true,
@@ -875,6 +952,7 @@ describe('FormsManager', () => {
       value: {
         name: null,
         email: null,
+        date: null,
         phone: {
           number: 3,
           prefix: 4,
@@ -884,6 +962,7 @@ describe('FormsManager', () => {
       rawValue: {
         name: null,
         email: null,
+        date: null,
         phone: {
           number: 3,
           prefix: 4,
@@ -912,6 +991,18 @@ describe('FormsManager', () => {
           pending: false,
         },
         email: {
+          value: null,
+          rawValue: null,
+          valid: true,
+          dirty: false,
+          invalid: false,
+          disabled: false,
+          errors: null,
+          touched: false,
+          pristine: true,
+          pending: false,
+        },
+        date: {
           value: null,
           rawValue: null,
           valid: true,
