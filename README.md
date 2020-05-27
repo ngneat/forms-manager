@@ -154,10 +154,10 @@ const nameControl = formsManager.getControl<string>('onboarding', 'name');
 }
 ```
 
-- `hasForm()` - Whether the form exists
+- `hasControl()` - Whether the control exists
 
 ```ts
-const hasForm = formsManager.hasForm('onboarding');
+const hasControl = formsManager.hasControl('onboarding');
 ```
 
 - `patchValue()` - A proxy to the original `patchValue` method
@@ -389,6 +389,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://www.netbasal.com"><img src="https://avatars1.githubusercontent.com/u/6745730?v=4" width="100px;" alt=""/><br /><sub><b>Netanel Basal</b></sub></a><br /><a href="https://github.com/ngneat/forms-manager/commits?author=NetanelBasal" title="Code">💻</a> <a href="https://github.com/ngneat/forms-manager/commits?author=NetanelBasal" title="Documentation">📖</a> <a href="#ideas-NetanelBasal" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/Coly010"><img src="https://avatars2.githubusercontent.com/u/12140467?v=4" width="100px;" alt=""/><br /><sub><b>Colum Ferry</b></sub></a><br /><a href="https://github.com/ngneat/forms-manager/commits?author=Coly010" title="Code">💻</a> <a href="https://github.com/ngneat/forms-manager/commits?author=Coly010" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/mehmet-erim"><img src="https://avatars0.githubusercontent.com/u/34455572?v=4" width="100px;" alt=""/><br /><sub><b>Mehmet Erim</b></sub></a><br /><a href="https://github.com/ngneat/forms-manager/commits?author=mehmet-erim" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/dspeirs7"><img src="https://avatars2.githubusercontent.com/u/739058?v=4" width="100px;" alt=""/><br /><sub><b>David Speirs</b></sub></a><br /><a href="https://github.com/ngneat/forms-manager/commits?author=dspeirs7" title="Code">💻</a> <a href="https://github.com/ngneat/forms-manager/commits?author=dspeirs7" title="Documentation">📖</a></td>
   </tr>
 </table>
 
