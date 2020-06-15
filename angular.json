@@ -128,6 +128,11 @@
           "options": {
             "tsConfig": "projects/ngneat/forms-manager/tsconfig.lib.json",
             "project": "projects/ngneat/forms-manager/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ngneat/forms-manager/tsconfig.lib.prod.json"
+            }
           }
         },
         "test": {
