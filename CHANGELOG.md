@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.1](https://github.com/ngneat/forms-manager/compare/v2.1.0...v2.1.1) (2020-06-15)
+
+### Bug Fixes
+
+- do not use spread operator on valid dates ([b68419d](https://github.com/ngneat/forms-manager/commit/b68419d121d66b38880dda276bfebd1ccb35d0a7)), closes [#7](https://github.com/ngneat/forms-manager/issues/7)
+
 ## [2.1.0](https://github.com/ngneat/forms-manager/compare/v2.0.0...v2.1.0) (2019-12-22)
 
 ### Features
