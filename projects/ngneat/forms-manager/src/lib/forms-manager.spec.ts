@@ -42,7 +42,7 @@ describe('FormsManager', () => {
     formsManager = null;
   });
 
-  fit('should update the store with forms value', fakeAsync(() => {
+  it('should update the store with forms value', fakeAsync(() => {
     expect(getSnapshot(formsManager)).toEqual({
       config: {
         value: '',
@@ -1184,4 +1184,60 @@ describe('FormsManager', () => {
     expect(spy).toHaveBeenCalledTimes(2);
     expect(spy).toHaveBeenCalledWith(['One', 'Two']);
   }));
+
+  describe('Initial Value', () => {
+    const fakeData = {
+      name: 'Chuck Norris',
+      email: 'chuck@norris.org',
+      date: '1940-03-10',
+      phone: {
+        number: '123456789007',
+        prefix: '+00',
+      },
+    };
+
+    const userForm = new FormGroup({
+      name: new FormControl('Chuck Norris'),
+      email: new FormControl('chuck@norris.org'),
+      date: new FormControl('1940-03-10'),
+      phone: new FormGroup({
+        number: new FormControl('123456789007'),
+        prefix: new FormControl('+00'),
+      }),
+    });
+
+    it('should get and set initial Value for a control', () => {
+      formsManager.setInitialValue('config', 'initial');
+
+      expect(formsManager.getInitialValue('config')).toEqual('initial');
+    });
+
+    it('should get and set initial Value for a group of control', () => {
+      formsManager.setInitialValue('group', fakeData);
+
+      expect(formsManager.getInitialValue('group')).toEqual(fakeData);
+    });
+
+    it('should get initial Value for a group of control if withInitialValue option has been set in upsert', () => {
+      formsManager.upsert('user', userForm, { withInitialValue: true });
+
+      expect(formsManager.getInitialValue('user')).toEqual(fakeData);
+    });
+
+    it('should get initial Value for a group of control if withInitialValue option has been set in upsert', () => {
+      formsManager.upsert('user', userForm, { withInitialValue: true });
+
+      expect(formsManager.getInitialValue('user')).toEqual(fakeData);
+    });
+
+    it('should get undefined if withInitialValue option has been set in upsert', () => {
+      formsManager.upsert('user', userForm);
+
+      expect(formsManager.getInitialValue('user')).toBeUndefined();
+    });
+
+    it('should get undefined if no initial Value set', () => {
+      expect(formsManager.getInitialValue('other')).toBeUndefined();
+    });
+  });
 });

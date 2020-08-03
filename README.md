@@ -51,27 +51,23 @@ import { NgFormsManager } from '@ngneat/forms-manager';
 
 @Component({
   template: `
-   <form [formGroup]="onboardingForm">
-     <input formControlName="name">
-     <input formControlName="age">
-     <input formControlName="city">
-   </form>
-  `
+    <form [formGroup]="onboardingForm">
+      <input formControlName="name" />
+      <input formControlName="age" />
+      <input formControlName="city" />
+    </form>
+  `,
 })
 export class OnboardingComponent {
-
   onboardingForm: FormGroup;
 
-  constructor(
-    private formsManager: NgFormsManager,
-    private builder: FormBuilder
-  ) {}
+  constructor(private formsManager: NgFormsManager, private builder: FormBuilder) {}
 
   ngOnInit() {
     this.onboardingForm = this.builder.group({
       name: [null, Validators.required],
-      age:  [null, Validators.required],
-      city: [null, Validators.required]
+      age: [null, Validators.required],
+      city: [null, Validators.required],
     });
 
     this.formsManager.upsert('onboarding', this.onboardingForm);
@@ -351,6 +347,18 @@ export class SettingsComponent {
     });
   }
 }
+```
+
+### `setInitialValue(name, value)` - Set the Initial Value
+
+```ts
+formsManager.setInitialValue('form', initialValue);
+```
+
+### `getInitialValue(name)` - Get the Initial Value or undefined if not exist.
+
+```ts
+formsManager.getInitialValue('form');
 ```
 
 ## NgFormsManager Config
