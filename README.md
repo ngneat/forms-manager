@@ -355,7 +355,7 @@ export class SettingsComponent {
 formsManager.setInitialValue('form', initialValue);
 ```
 
-### `getInitialValue(name)` - Get the Initial Value or undefined if not exist.
+### `getInitialValue(name)` - Get the initial value or `undefined` if not exist.
 
 ```ts
 formsManager.getInitialValue('form');
