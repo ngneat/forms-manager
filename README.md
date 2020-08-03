@@ -51,27 +51,23 @@ import { NgFormsManager } from '@ngneat/forms-manager';
 
 @Component({
   template: `
-   <form [formGroup]="onboardingForm">
-     <input formControlName="name">
-     <input formControlName="age">
-     <input formControlName="city">
-   </form>
-  `
+    <form [formGroup]="onboardingForm">
+      <input formControlName="name" />
+      <input formControlName="age" />
+      <input formControlName="city" />
+    </form>
+  `,
 })
 export class OnboardingComponent {
-
   onboardingForm: FormGroup;
 
-  constructor(
-    private formsManager: NgFormsManager,
-    private builder: FormBuilder
-  ) {}
+  constructor(private formsManager: NgFormsManager, private builder: FormBuilder) {}
 
   ngOnInit() {
     this.onboardingForm = this.builder.group({
       name: [null, Validators.required],
-      age:  [null, Validators.required],
-      city: [null, Validators.required]
+      age: [null, Validators.required],
+      city: [null, Validators.required],
     });
 
     this.formsManager.upsert('onboarding', this.onboardingForm);
@@ -353,6 +349,18 @@ export class SettingsComponent {
 }
 ```
 
+### `setInitialValue(name, value)` - Set the initial form's value
+
+```ts
+formsManager.setInitialValue('form', initialValue);
+```
+
+### `getInitialValue(name)` - Get the initial value or `undefined` if not exist.
+
+```ts
+formsManager.getInitialValue('form');
+```
+
 ## NgFormsManager Config
 
 You can override the default config by passing the `NG_FORMS_MANAGER_CONFIG` provider:
@@ -392,6 +400,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/Coly010"><img src="https://avatars2.githubusercontent.com/u/12140467?v=4" width="100px;" alt=""/><br /><sub><b>Colum Ferry</b></sub></a><br /><a href="https://github.com/ngneat/forms-manager/commits?author=Coly010" title="Code">💻</a> <a href="https://github.com/ngneat/forms-manager/commits?author=Coly010" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/mehmet-erim"><img src="https://avatars0.githubusercontent.com/u/34455572?v=4" width="100px;" alt=""/><br /><sub><b>Mehmet Erim</b></sub></a><br /><a href="https://github.com/ngneat/forms-manager/commits?author=mehmet-erim" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/dspeirs7"><img src="https://avatars2.githubusercontent.com/u/739058?v=4" width="100px;" alt=""/><br /><sub><b>David Speirs</b></sub></a><br /><a href="https://github.com/ngneat/forms-manager/commits?author=dspeirs7" title="Code">💻</a> <a href="https://github.com/ngneat/forms-manager/commits?author=dspeirs7" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/manudss"><img src="https://avatars3.githubusercontent.com/u/1046806?v=4" width="100px;" alt=""/><br /><sub><b>Emmanuel De Saint Steban</b></sub></a><br /><a href="https://github.com/ngneat/forms-manager/commits?author=manudss" title="Code">💻</a> <a href="https://github.com/ngneat/forms-manager/commits?author=manudss" title="Documentation">📖</a></td>
   </tr>
 </table>
 

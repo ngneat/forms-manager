@@ -191,6 +191,23 @@ export class NgFormsManager<FormsState = any> {
 
   /**
    *
+   * Get the initial value for a control
+   *
+   * Will return undefined, if no initial value was returned.
+   *
+   * @example
+   *
+   * manager.getInitialValue('login');
+   *
+   */
+  getInitialValue<State = any>(name: keyof FormsState): State | undefined;
+  getInitialValue<T extends keyof FormsState>(name: keyof FormsState): FormsState[T] | undefined;
+  getInitialValue(name: keyof FormsState): any | undefined {
+    return this.initialValues$$.get(name);
+  }
+
+  /**
+   *
    * @example
    *
    *  Whether the form exists
