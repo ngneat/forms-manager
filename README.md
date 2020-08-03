@@ -349,7 +349,7 @@ export class SettingsComponent {
 }
 ```
 
-### `setInitialValue(name, value)` - Set the Initial Value
+### `setInitialValue(name, value)` - Set the initial form's value
 
 ```ts
 formsManager.setInitialValue('form', initialValue);
