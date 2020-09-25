@@ -9,7 +9,7 @@ import { Config, NG_FORMS_MANAGER_CONFIG, NgFormsManagerConfig } from './config'
 import { isEqual } from './isEqual';
 import { deleteControl, findControl, handleFormArray, toStore } from './builders';
 
-const NO_DEBOUNCE = 0;
+const NO_DEBOUNCE = Symbol('NO_DEBOUNCE');
 
 @Injectable({ providedIn: 'root' })
 export class NgFormsManager<FormsState = any> {
@@ -401,7 +401,10 @@ export class NgFormsManager<FormsState = any> {
 
       if (control instanceof FormGroup) {
         return Object.keys(control.controls).reduce(
-          (previous, key) => [...previous, control.get(key).valueChanges.pipe(mapTo(NO_DEBOUNCE))],
+          (previous, key) =>
+            control.get(key).updateOn === 'blur'
+              ? [...previous, control.get(key).valueChanges.pipe(mapTo(NO_DEBOUNCE))]
+              : [...previous],
           streams
         );
       }

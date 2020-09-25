@@ -1240,4 +1240,46 @@ describe('FormsManager', () => {
       expect(formsManager.getInitialValue('other')).toBeUndefined();
     });
   });
+
+  describe('Debounce', () => {
+    it('should update value after default debounce of 300ms for update on change controls', fakeAsync(() => {
+      const updateOnChangeGroup = new FormGroup({
+        name: new FormControl(null, { updateOn: 'change' }),
+      });
+      formsManager.upsert('updateOnChangeGroup', updateOnChangeGroup);
+
+      updateOnChangeGroup.get('name').patchValue('Smith');
+
+      tick(100);
+      expect(formsManager.getControl('updateOnChangeGroup', 'name').value).toEqual(null);
+
+      tick(301);
+      expect(formsManager.getControl('updateOnChangeGroup', 'name').value).toEqual('Smith');
+    }));
+
+    it('should skip debounce and update value immediately for a form group set to update on blur', () => {
+      const updateOnBlurGroup = new FormGroup(
+        {
+          name: new FormControl(),
+        },
+        { updateOn: 'blur' }
+      );
+      formsManager.upsert('updateOnBlurGroup', updateOnBlurGroup);
+
+      updateOnBlurGroup.get('name').patchValue('Smith');
+
+      expect(formsManager.getControl('updateOnBlurGroup', 'name').value).toEqual('Smith');
+    });
+
+    it('should skip debounce and update value immediately for a form control set to update on blur', () => {
+      const updateOnBlurGroup = new FormGroup({
+        name: new FormControl(null, { updateOn: 'blur' }),
+      });
+      formsManager.upsert('updateOnBlurGroup', updateOnBlurGroup);
+
+      updateOnBlurGroup.get('name').patchValue('Smith');
+
+      expect(formsManager.getControl('updateOnBlurGroup', 'name').value).toEqual('Smith');
+    });
+  });
 });
