@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/ngneat/forms-manager/compare/v2.1.2...v2.2.0) (2020-09-27)
+
+### Features
+
+- **lib:** add getInitialValue() function ([c7b134f](https://github.com/ngneat/forms-manager/commit/c7b134f2a1472680dd99ce0855e1eb11a77f01e8)), closes [#15](https://github.com/ngneat/forms-manager/issues/15)
+
+### Bug Fixes
+
+- add unit tests ([a5fcdbd](https://github.com/ngneat/forms-manager/commit/a5fcdbda41bd470c411d192b06c297c85eed0e38))
+- do not debounce for update on blur ([edd5fb0](https://github.com/ngneat/forms-manager/commit/edd5fb07274ddc23e1585acd281c4dd9c06e86aa))
+
 ### [2.1.2](https://github.com/ngneat/forms-manager/compare/v2.1.0...v2.1.2) (2020-06-15)
 
 ### Bug Fixes
