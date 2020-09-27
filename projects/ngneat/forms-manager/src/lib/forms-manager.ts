@@ -1,13 +1,15 @@
 import { Inject, Injectable, Optional } from '@angular/core';
-import { AbstractControl } from '@angular/forms';
-import { coerceArray, filterControlKeys, filterNil, isBrowser, isObject, mergeDeep } from './utils';
-import { merge, Observable, Subject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { AbstractControl, FormGroup } from '@angular/forms';
+import { coerceArray, filterControlKeys, filterNil, isBrowser, mergeDeep } from './utils';
+import { EMPTY, merge, Observable, Subject, Subscription, timer } from 'rxjs';
+import { debounce, distinctUntilChanged, filter, map, mapTo, tap } from 'rxjs/operators';
 import { FormsStore } from './forms-manager.store';
 import { Control, ControlFactory, FormKeys, HashMap, UpsertConfig } from './types';
 import { Config, NG_FORMS_MANAGER_CONFIG, NgFormsManagerConfig } from './config';
 import { isEqual } from './isEqual';
 import { deleteControl, findControl, handleFormArray, toStore } from './builders';
+
+const NO_DEBOUNCE = Symbol('NO_DEBOUNCE');
 
 @Injectable({ providedIn: 'root' })
 export class NgFormsManager<FormsState = any> {
@@ -374,10 +376,10 @@ export class NgFormsManager<FormsState = any> {
     }
 
     const unsubscribe = merge(
-      control.valueChanges,
-      control.statusChanges.pipe(distinctUntilChanged())
+      control.statusChanges.pipe(distinctUntilChanged()),
+      ...this.getValueChangeStreams(control)
     )
-      .pipe(debounceTime(mergedConfig.debounceTime))
+      .pipe(debounce(value => (value === NO_DEBOUNCE ? EMPTY : timer(mergedConfig.debounceTime))))
       .subscribe(() => {
         const value = this.updateStore(name, control);
         this.updateStorage(name, value, mergedConfig);
@@ -387,6 +389,28 @@ export class NgFormsManager<FormsState = any> {
     this.instances$$.set(name, control);
 
     return this;
+  }
+
+  private getValueChangeStreams(control: AbstractControl) {
+    const streams = [];
+
+    if (control.updateOn === 'blur') {
+      streams.push(control.valueChanges.pipe(mapTo(NO_DEBOUNCE)));
+    } else {
+      streams.push(control.valueChanges);
+
+      if (control instanceof FormGroup) {
+        return Object.keys(control.controls).reduce(
+          (previous, key) =>
+            control.get(key).updateOn === 'blur'
+              ? [...previous, control.get(key).valueChanges.pipe(mapTo(NO_DEBOUNCE))]
+              : [...previous],
+          streams
+        );
+      }
+    }
+
+    return streams;
   }
 
   private removeFromStorage() {
