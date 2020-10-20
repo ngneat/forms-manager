@@ -236,7 +236,7 @@ export class HomeComponent{
     * Observe the `minPrice` value in the `settings` form
     * and update the price `control` validators
     */
-    this.formsManager.selectValue<number>('settings', 'minPrice')
+    this.formsManager.valueChanges<number>('settings', 'minPrice')
      .subscribe(minPrice => setValidators(this.form.get('price'), Validators.min(minPrice));
   }
 }
