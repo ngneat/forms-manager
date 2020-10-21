@@ -149,6 +149,7 @@ const nameControl = formsManager.getControl<string>('onboarding', 'name');
    touched: boolean,
    pristine: boolean,
    pending: boolean,
+   untouched: boolean,
 }
 ```
 
@@ -168,6 +169,48 @@ formsManager.patchValue('onboarding', value, options);
 
 ```ts
 formsManager.setValue('onboarding', value, options);
+```
+
+- `markAllAsTouched()` - A proxy to the original `markAllAsTouched` method
+
+```ts
+formsManager.markAllAsTouched('onboarding', options);
+```
+
+- `markAsTouched()` - A proxy to the original `markAsTouched` method
+
+```ts
+formsManager.markAsTouched('onboarding', options);
+```
+
+- `markAllAsDirty()` - Marks the control and all its descendant controls as dirty
+
+```ts
+formsManager.markAllAsDirty('onboarding', options);
+```
+
+- `markAsDirty()` - A proxy to the original `markAsDirty` method
+
+```ts
+formsManager.markAsDirty('onboarding', options);
+```
+
+- `markAsPending()` - A proxy to the original `markAsPending` method
+
+```ts
+formsManager.markAsPending('onboarding', options);
+```
+
+- `markAsPristine()` - A proxy to the original `markAsPristine` method
+
+```ts
+formsManager.markAsPristine('onboarding', options);
+```
+
+- `markAsUntouched()` - A proxy to the original `markAsUntouched` method
+
+```ts
+formsManager.markAsUntouched('onboarding', options);
 ```
 
 - `unsubscribe()` - Unsubscribe from the form's `valueChanges` observable (always call it on `ngOnDestroy`)
@@ -396,15 +439,16 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://www.netbasal.com"><img src="https://avatars1.githubusercontent.com/u/6745730?v=4" width="100px;" alt=""/><br /><sub><b>Netanel Basal</b></sub></a><br /><a href="https://github.com/ngneat/forms-manager/commits?author=NetanelBasal" title="Code">💻</a> <a href="https://github.com/ngneat/forms-manager/commits?author=NetanelBasal" title="Documentation">📖</a> <a href="#ideas-NetanelBasal" title="Ideas, Planning, & Feedback">🤔</a></td>
-    <td align="center"><a href="https://github.com/Coly010"><img src="https://avatars2.githubusercontent.com/u/12140467?v=4" width="100px;" alt=""/><br /><sub><b>Colum Ferry</b></sub></a><br /><a href="https://github.com/ngneat/forms-manager/commits?author=Coly010" title="Code">💻</a> <a href="https://github.com/ngneat/forms-manager/commits?author=Coly010" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://github.com/mehmet-erim"><img src="https://avatars0.githubusercontent.com/u/34455572?v=4" width="100px;" alt=""/><br /><sub><b>Mehmet Erim</b></sub></a><br /><a href="https://github.com/ngneat/forms-manager/commits?author=mehmet-erim" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://github.com/dspeirs7"><img src="https://avatars2.githubusercontent.com/u/739058?v=4" width="100px;" alt=""/><br /><sub><b>David Speirs</b></sub></a><br /><a href="https://github.com/ngneat/forms-manager/commits?author=dspeirs7" title="Code">💻</a> <a href="https://github.com/ngneat/forms-manager/commits?author=dspeirs7" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://github.com/manudss"><img src="https://avatars3.githubusercontent.com/u/1046806?v=4" width="100px;" alt=""/><br /><sub><b>Emmanuel De Saint Steban</b></sub></a><br /><a href="https://github.com/ngneat/forms-manager/commits?author=manudss" title="Code">💻</a> <a href="https://github.com/ngneat/forms-manager/commits?author=manudss" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://www.netbasal.com"><img src="https://avatars1.githubusercontent.com/u/6745730?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Netanel Basal</b></sub></a><br /><a href="https://github.com/ngneat/forms-manager/commits?author=NetanelBasal" title="Code">💻</a> <a href="https://github.com/ngneat/forms-manager/commits?author=NetanelBasal" title="Documentation">📖</a> <a href="#ideas-NetanelBasal" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/Coly010"><img src="https://avatars2.githubusercontent.com/u/12140467?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Colum Ferry</b></sub></a><br /><a href="https://github.com/ngneat/forms-manager/commits?author=Coly010" title="Code">💻</a> <a href="https://github.com/ngneat/forms-manager/commits?author=Coly010" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/mehmet-erim"><img src="https://avatars0.githubusercontent.com/u/34455572?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mehmet Erim</b></sub></a><br /><a href="https://github.com/ngneat/forms-manager/commits?author=mehmet-erim" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/dspeirs7"><img src="https://avatars2.githubusercontent.com/u/739058?v=4?s=100" width="100px;" alt=""/><br /><sub><b>David Speirs</b></sub></a><br /><a href="https://github.com/ngneat/forms-manager/commits?author=dspeirs7" title="Code">💻</a> <a href="https://github.com/ngneat/forms-manager/commits?author=dspeirs7" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/manudss"><img src="https://avatars3.githubusercontent.com/u/1046806?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Emmanuel De Saint Steban</b></sub></a><br /><a href="https://github.com/ngneat/forms-manager/commits?author=manudss" title="Code">💻</a> <a href="https://github.com/ngneat/forms-manager/commits?author=manudss" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/adrianriepl"><img src="https://avatars2.githubusercontent.com/u/11076678?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Adrian Riepl</b></sub></a><br /><a href="https://github.com/ngneat/forms-manager/commits?author=adrianriepl" title="Code">💻</a> <a href="https://github.com/ngneat/forms-manager/commits?author=adrianriepl" title="Documentation">📖</a></td>
   </tr>
 </table>
 
-<!-- markdownlint-enable -->
+<!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
