@@ -149,6 +149,7 @@ const nameControl = formsManager.getControl<string>('onboarding', 'name');
    touched: boolean,
    pristine: boolean,
    pending: boolean,
+   untouched: boolean,
 }
 ```
 

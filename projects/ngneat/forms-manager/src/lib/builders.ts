@@ -87,6 +87,7 @@ export function buildValue(control: Partial<AbstractControl>): Control {
     touched: control.touched,
     pristine: control.pristine,
     pending: control.pending,
+    untouched: control.untouched,
   };
 
   if (control instanceof FormGroup || control instanceof FormArray) {
