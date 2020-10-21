@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/ngneat/forms-manager/compare/v2.2.0...v2.3.0) (2020-10-21)
+
+### Features
+
+- **lib:** add property untouched to type Control ([5ad73f6](https://github.com/ngneat/forms-manager/commit/5ad73f621703a03f27c338b1e3242da2474711fa))
+- **lib:** support for mark\* methods ([f622d25](https://github.com/ngneat/forms-manager/commit/f622d2546b69859109a1d4e5299103465fbae6fe))
+
 ## [2.2.0](https://github.com/ngneat/forms-manager/compare/v2.1.2...v2.2.0) (2020-09-27)
 
 ### Features
