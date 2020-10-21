@@ -59,6 +59,16 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "adrianriepl",
+      "name": "Adrian Riepl",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/11076678?v=4",
+      "profile": "https://github.com/adrianriepl",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7
