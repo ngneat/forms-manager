@@ -630,7 +630,11 @@ export class NgFormsManager<FormsState = any> {
     control.markAsDirty(options);
 
     if (control instanceof FormGroup || control instanceof FormArray) {
-      Object.values(control.controls).forEach((control: AbstractControl) => {
+      let controls: AbstractControl[] = Object.keys(control.controls).map(
+        controlName => control.controls[controlName]
+      );
+
+      controls.forEach(control => {
         control.markAsDirty(options);
 
         if ((control as FormGroup | FormArray).controls) {
