@@ -1,5 +1,5 @@
 import { Inject, Injectable, Optional } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup, FormArray } from '@angular/forms';
 import { coerceArray, filterControlKeys, filterNil, isBrowser, mergeDeep } from './utils';
 import { EMPTY, merge, Observable, Subject, Subscription, timer } from 'rxjs';
 import { debounce, distinctUntilChanged, filter, map, mapTo, tap } from 'rxjs/operators';
@@ -283,6 +283,163 @@ export class NgFormsManager<FormsState = any> {
    *
    * @example
    *
+   * A proxy to the original `markAllAsTouched` method
+   *
+   * manager.markAllAsTouched('login');
+   *
+   */
+  markAllAsTouched(name: keyof FormsState): void {
+    if (this.instances$$.has(name)) {
+      this.instances$$.get(name).markAllAsTouched();
+
+      this.updateStore(name, this.instances$$.get(name));
+    }
+  }
+
+  /**
+   *
+   * @example
+   *
+   * A proxy to the original `markAsTouched` method
+   *
+   * manager.markAsTouched('login');
+   *
+   */
+  markAsTouched(
+    name: keyof FormsState,
+    options?: {
+      onlySelf?: boolean;
+      emitEvent?: boolean;
+    }
+  ): void {
+    if (this.instances$$.has(name)) {
+      this.instances$$.get(name).markAsTouched(options);
+
+      this.updateStore(name, this.instances$$.get(name));
+    }
+  }
+
+  /**
+   *
+   * @example
+   *
+   * Marks the control and all its descendant controls as dirty.
+   *
+   * manager.markAllAsDirty('login');
+   *
+   */
+  markAllAsDirty(
+    name: keyof FormsState,
+    options?: {
+      onlySelf?: boolean;
+      emitEvent?: boolean;
+    }
+  ): void {
+    if (this.instances$$.has(name)) {
+      let control = this.instances$$.get(name);
+
+      this.markDescendantsAsDirty(control, options);
+
+      this.updateStore(name, control);
+    }
+  }
+
+  /**
+   *
+   * @example
+   *
+   * A proxy to the original `markAsDirty` method
+   *
+   * manager.markAsDirty('login');
+   *
+   */
+  markAsDirty(
+    name: keyof FormsState,
+    options?: {
+      onlySelf?: boolean;
+      emitEvent?: boolean;
+    }
+  ): void {
+    if (this.instances$$.has(name)) {
+      this.instances$$.get(name).markAsDirty(options);
+
+      this.updateStore(name, this.instances$$.get(name));
+    }
+  }
+
+  /**
+   *
+   * @example
+   *
+   * A proxy to the original `markAsPending` method
+   *
+   * manager.markAsPending('login');
+   *
+   */
+  markAsPending(
+    name: keyof FormsState,
+    options?: {
+      onlySelf?: boolean;
+      emitEvent?: boolean;
+    }
+  ): void {
+    if (this.instances$$.has(name)) {
+      this.instances$$.get(name).markAsPending(options);
+
+      this.updateStore(name, this.instances$$.get(name));
+    }
+  }
+
+  /**
+   *
+   * @example
+   *
+   * A proxy to the original `markAsPristine` method
+   *
+   * manager.markAsPristine('login');
+   *
+   */
+  markAsPristine(
+    name: keyof FormsState,
+    options?: {
+      onlySelf?: boolean;
+      emitEvent?: boolean;
+    }
+  ): void {
+    if (this.instances$$.has(name)) {
+      this.instances$$.get(name).markAsPristine(options);
+
+      this.updateStore(name, this.instances$$.get(name));
+    }
+  }
+
+  /**
+   *
+   * @example
+   *
+   * A proxy to the original `markAsUntouched` method
+   *
+   * manager.markAsUntouched('login');
+   *
+   */
+  markAsUntouched(
+    name: keyof FormsState,
+    options?: {
+      onlySelf?: boolean;
+      emitEvent?: boolean;
+    }
+  ): void {
+    if (this.instances$$.has(name)) {
+      this.instances$$.get(name).markAsUntouched(options);
+
+      this.updateStore(name, this.instances$$.get(name));
+    }
+  }
+
+  /**
+   *
+   * @example
+   *
    * manager.unsubscribe('login');
    *
    */
@@ -461,5 +618,25 @@ export class NgFormsManager<FormsState = any> {
 
   private removeInitialValue(name: FormKeys<FormsState>) {
     coerceArray(name).forEach(name => this.initialValues$$.delete(name));
+  }
+
+  private markDescendantsAsDirty(
+    control: AbstractControl,
+    options?: {
+      onlySelf?: boolean;
+      emitEvent?: boolean;
+    }
+  ) {
+    control.markAsDirty(options);
+
+    if (control instanceof FormGroup || control instanceof FormArray) {
+      Object.values(control.controls).forEach((control: AbstractControl) => {
+        control.markAsDirty(options);
+
+        if ((control as FormGroup | FormArray).controls) {
+          this.markDescendantsAsDirty(control, options);
+        }
+      });
+    }
   }
 }

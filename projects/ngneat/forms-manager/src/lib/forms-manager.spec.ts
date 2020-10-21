@@ -1282,4 +1282,75 @@ describe('FormsManager', () => {
       expect(formsManager.getControl('updateOnBlurGroup', 'name').value).toEqual('Smith');
     });
   });
+
+  describe('Mark*', () => {
+    let formsManager: NgFormsManager, userForm: FormGroup;
+
+    beforeEach(() => {
+      formsManager = new NgFormsManager(new NgFormsManagerConfig());
+
+      userForm = new FormGroup({
+        name: new FormControl(),
+        email: new FormControl(),
+        date: new FormControl(),
+        phone: new FormGroup({
+          number: new FormControl(),
+          prefix: new FormControl(),
+        }),
+      });
+
+      formsManager.upsert('user', userForm);
+    });
+
+    it('should mark control and its descendants as touched', () => {
+      formsManager.markAllAsTouched('user');
+
+      expect(formsManager.getControl('user').touched).toBeTrue();
+      expect(formsManager.getControl('user', 'email').touched).toBeTrue();
+      expect(formsManager.getControl('user', 'phone.number').touched).toBeTrue();
+    });
+
+    it('should mark control as touched', () => {
+      formsManager.markAsTouched('user');
+
+      expect(formsManager.getControl('user').touched).toBeTrue();
+    });
+
+    it('should mark control and its descendants as dirty', () => {
+      formsManager.markAllAsDirty('user');
+
+      expect(formsManager.getControl('user').dirty).toBeTrue();
+      expect(formsManager.getControl('user', 'email').dirty).toBeTrue();
+      expect(formsManager.getControl('user', 'phone.number').dirty).toBeTrue();
+    });
+
+    it('should mark control as dirty', () => {
+      formsManager.markAsDirty('user');
+
+      expect(formsManager.getControl('user').dirty).toBeTrue();
+    });
+
+    it('should mark control as pending', () => {
+      formsManager.markAsPending('user');
+
+      expect(formsManager.getControl('user').pending).toBeTrue();
+    });
+
+    it('should mark control as pristine', () => {
+      formsManager.markAsPristine('user');
+
+      expect(formsManager.getControl('user').pristine).toBeTrue();
+    });
+
+    it('should mark control as untouched', () => {
+      formsManager.markAsUntouched('user');
+
+      expect(formsManager.getControl('user').untouched).toBeTrue();
+    });
+
+    afterEach(() => {
+      formsManager.unsubscribe();
+      formsManager = null;
+    });
+  });
 });

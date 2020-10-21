@@ -170,6 +170,48 @@ formsManager.patchValue('onboarding', value, options);
 formsManager.setValue('onboarding', value, options);
 ```
 
+- `markAllAsTouched()` - A proxy to the original `markAllAsTouched` method
+
+```ts
+formsManager.markAllAsTouched('onboarding', options);
+```
+
+- `markAsTouched()` - A proxy to the original `markAsTouched` method
+
+```ts
+formsManager.markAsTouched('onboarding', options);
+```
+
+- `markAllAsDirty()` - Marks the control and all its descendant controls as dirty
+
+```ts
+formsManager.markAllAsDirty('onboarding', options);
+```
+
+- `markAsDirty()` - A proxy to the original `markAsDirty` method
+
+```ts
+formsManager.markAsDirty('onboarding', options);
+```
+
+- `markAsPending()` - A proxy to the original `markAsPending` method
+
+```ts
+formsManager.markAsPending('onboarding', options);
+```
+
+- `markAsPristine()` - A proxy to the original `markAsPristine` method
+
+```ts
+formsManager.markAsPristine('onboarding', options);
+```
+
+- `markAsUntouched()` - A proxy to the original `markAsUntouched` method
+
+```ts
+formsManager.markAsUntouched('onboarding', options);
+```
+
 - `unsubscribe()` - Unsubscribe from the form's `valueChanges` observable (always call it on `ngOnDestroy`)
 
 ```ts
