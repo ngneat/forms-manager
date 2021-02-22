@@ -171,6 +171,12 @@ formsManager.patchValue('onboarding', value, options);
 formsManager.setValue('onboarding', value, options);
 ```
 
+- `reset()` - A proxy to the original `reset` method
+
+```ts
+formsManager.reset('onboarding', value, options);
+```
+
 - `markAllAsTouched()` - A proxy to the original `markAllAsTouched` method
 
 ```ts

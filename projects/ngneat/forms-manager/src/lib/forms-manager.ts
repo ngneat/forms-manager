@@ -1,13 +1,13 @@
 import { Inject, Injectable, Optional } from '@angular/core';
-import { AbstractControl, FormGroup, FormArray } from '@angular/forms';
-import { coerceArray, filterControlKeys, filterNil, isBrowser, mergeDeep } from './utils';
+import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
 import { EMPTY, merge, Observable, Subject, Subscription, timer } from 'rxjs';
-import { debounce, distinctUntilChanged, filter, map, mapTo, tap } from 'rxjs/operators';
-import { FormsStore } from './forms-manager.store';
-import { Control, ControlFactory, FormKeys, HashMap, UpsertConfig } from './types';
-import { Config, NG_FORMS_MANAGER_CONFIG, NgFormsManagerConfig } from './config';
-import { isEqual } from './isEqual';
+import { debounce, distinctUntilChanged, filter, map, mapTo } from 'rxjs/operators';
 import { deleteControl, findControl, handleFormArray, toStore } from './builders';
+import { Config, NgFormsManagerConfig, NG_FORMS_MANAGER_CONFIG } from './config';
+import { FormsStore } from './forms-manager.store';
+import { isEqual } from './isEqual';
+import { Control, ControlFactory, FormKeys, HashMap, UpsertConfig } from './types';
+import { coerceArray, filterControlKeys, filterNil, isBrowser, mergeDeep } from './utils';
 
 const NO_DEBOUNCE = Symbol('NO_DEBOUNCE');
 
@@ -263,6 +263,28 @@ export class NgFormsManager<FormsState = any> {
   ) {
     if (this.instances$$.has(name)) {
       this.instances$$.get(name).setValue(value, options);
+    }
+  }
+
+  /**
+   *
+   * @example
+   *
+   * A proxy to the original `reset` method
+   *
+   * manager.reset('login', { email: '' });
+   *
+   */
+  reset<T extends keyof FormsState>(
+    name: T,
+    value?: Partial<FormsState[T]>,
+    options?: {
+      onlySelf?: boolean;
+      emitEvent?: boolean;
+    }
+  ) {
+    if (this.instances$$.has(name)) {
+      this.instances$$.get(name).reset(value, options);
     }
   }
 
