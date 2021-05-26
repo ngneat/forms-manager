@@ -256,6 +256,27 @@ formsManager.upsert(formName, abstractContorl, {
 });
 ```
 
+By default the library provides LocalStorageManager and SessionStorageManager. It's possible to store the form value into a custom storage. Just implement the PersistManager interface, and use it when calling the upsert function.
+
+```ts
+export class StateStoreManager<T> implements PersistManager<T> {
+  setValue(key: string, data: T) {
+     ...
+  }
+
+  getValue(key: string) {
+    ...
+  }
+}
+```
+
+```ts
+formsManager.upsert(formName, abstractContorl, {
+  persistState: true,
+  persistManager: new StateStoreManager(),
+});
+```
+
 ## Validators
 
 The library exposes two helpers method for adding cross component validation:
