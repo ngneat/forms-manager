@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/ngneat/forms-manager/compare/v2.3.0...v2.4.0) (2021-06-27)
+
+### Features
+
+- **forms-mananger:** added reset proxy ([091723e](https://github.com/ngneat/forms-manager/commit/091723edc05350cb7aa8bce2b3afb95dd0c9a291))
+
+### Bug Fixes
+
+- 🐛 clear all initial values when clearing complete store ([fb642a5](https://github.com/ngneat/forms-manager/commit/fb642a5e5358b694be16b4e3f17c2a4faab80c6c)), closes [#29](https://github.com/ngneat/forms-manager/issues/29)
+
 ## [2.3.0](https://github.com/ngneat/forms-manager/compare/v2.2.0...v2.3.0) (2020-10-21)
 
 ### Features

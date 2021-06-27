@@ -1,6 +1,6 @@
 {
   "name": "@ngneat/forms-manager",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "Forms Manager library for Angular",
   "license": "MIT",
   "publishConfig": {
