@@ -1273,6 +1273,11 @@ describe('FormsManager', () => {
       }),
     });
 
+    const addressForm = new FormGroup({
+      zip: new FormControl('12345'),
+      place: new FormControl('Schenectady'),
+    });
+
     it('should get and set initial Value for a control', () => {
       formsManager.setInitialValue('config', 'initial');
 
@@ -1305,6 +1310,26 @@ describe('FormsManager', () => {
 
     it('should get undefined if no initial Value set', () => {
       expect(formsManager.getInitialValue('other')).toBeUndefined();
+    });
+
+    it('should clear initial Value for a group of control', () => {
+      formsManager.upsert('user', userForm, { withInitialValue: true });
+      formsManager.upsert('address', addressForm, { withInitialValue: true });
+
+      formsManager.clear('user');
+
+      expect(formsManager.getInitialValue('user')).toBeUndefined();
+      expect(formsManager.getInitialValue('address')).toBeDefined();
+    });
+
+    it('should clear all initial Values when clearing full store', () => {
+      formsManager.upsert('user', userForm, { withInitialValue: true });
+      formsManager.upsert('address', addressForm, { withInitialValue: true });
+
+      formsManager.clear();
+
+      expect(formsManager.getInitialValue('user')).toBeUndefined();
+      expect(formsManager.getInitialValue('address')).toBeUndefined();
     });
   });
 

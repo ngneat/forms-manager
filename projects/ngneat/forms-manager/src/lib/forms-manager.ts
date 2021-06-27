@@ -638,8 +638,10 @@ export class NgFormsManager<FormsState = any> {
     return value;
   }
 
-  private removeInitialValue(name: FormKeys<FormsState>) {
-    coerceArray(name).forEach(name => this.initialValues$$.delete(name));
+  private removeInitialValue(name?: FormKeys<FormsState>) {
+    name
+      ? coerceArray(name).forEach(name => this.initialValues$$.delete(name))
+      : this.initialValues$$.clear();
   }
 
   private markDescendantsAsDirty(
