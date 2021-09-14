@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { from, isObservable, Observable, of } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 export type Diff<T, U> = T extends U ? never : T;
@@ -102,4 +102,16 @@ export function mergeDeep(target, ...sources) {
   }
 
   return mergeDeep(target, ...sources);
+}
+
+export function isPromise(value: any): value is Promise<unknown> {
+  return typeof value?.then === 'function';
+}
+
+export function wrapIntoObservable<T>(value: T | Promise<T> | Observable<T>): Observable<T> {
+  if (isObservable(value) || isPromise(value)) {
+    return from(value);
+  }
+
+  return of(value);
 }
