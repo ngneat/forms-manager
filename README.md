@@ -330,7 +330,7 @@ export class HomeComponent {
 `NgFormsManager` can take a generic type where you can define the forms shape. For example:
 
 ```ts
-interface AppForms = {
+interface AppForms {
   onboarding: {
     name: string;
     age: number;
