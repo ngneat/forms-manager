@@ -246,17 +246,64 @@ formsManager.destroy();
 formsManager.controlChanges('login').pipe(takeUntil(controlDestroyed('login')));
 ```
 
-## Persist to Local Storage or Session Storage
+## Persist to browser storage (localStorage, sessionStorage or custom storage solution)
 
 In the `upsert` method, pass the `persistState` flag:
 
 ```ts
 formsManager.upsert(formName, abstractContorl, {
-  persistState: true;
+  persistState: true,
 });
 ```
 
-By default, the state is persisted to Local Storage. Session Storage can be used instead by passing the `NG_FORMS_MANAGER_CONFIG` provider (see below).
+By default, the state is persisted to `localStorage` ([Link](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)).
+
+For storage to `sessionStorage` ([Link](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage)), add `FORMS_MANAGER_SESSION_STORAGE_PROVIDER` to the providers array in `app.module.ts`:
+
+```ts
+import { FORMS_MANAGER_SESSION_STORAGE_PROVIDER } from '@ngneat/forms-manager';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [ ... ],
+  providers: [
+    ...
+    FORMS_MANAGER_SESSION_STORAGE_PROVIDER,
+    ...
+  ],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+```
+
+Furthermore, a **custom storage provider**, which must implement the `Storage` interface ([Link](https://developer.mozilla.org/en-US/docs/Web/API/Storage)) can be provided through the `FORMS_MANAGER_STORAGE` token:
+
+```ts
+import { FORMS_MANAGER_STORAGE } from '@ngneat/forms-manager';
+
+class MyStorage implements Storage {
+  public clear() { ... }
+  public key(index: number): string | null { ... }
+  public getItem(key: string): string | null { ... }
+  public removeItem(key: string) { ... }
+  public setItem(key: string, value: string) { ... }
+}
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [ ... ],
+  providers: [
+    ...
+    {
+      provide: FORMS_MANAGER_STORAGE,
+      useValue: MyStorage,
+    },
+    ...
+  ],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+```
 
 ## Validators
 
@@ -428,7 +475,6 @@ import { NG_FORMS_MANAGER_CONFIG, NgFormsManagerConfig } from '@ngneat/forms-man
       useValue: new NgFormsManagerConfig({
         debounceTime: 1000, // defaults to 300
         storage: {
-          type: 'SessionStorage',
           key: 'NgFormManager',
         },
       }),
