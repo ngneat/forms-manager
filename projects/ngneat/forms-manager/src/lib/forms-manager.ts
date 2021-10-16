@@ -3,24 +3,33 @@ import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
 import { EMPTY, merge, Observable, Subject, Subscription, timer } from 'rxjs';
 import { debounce, distinctUntilChanged, filter, map, mapTo } from 'rxjs/operators';
 import { deleteControl, findControl, handleFormArray, toStore } from './builders';
-import { Config, NgFormsManagerConfig, NG_FORMS_MANAGER_CONFIG } from './config';
+import { Config, NG_FORMS_MANAGER_CONFIG, NgFormsManagerConfig } from './config';
 import { FormsStore } from './forms-manager.store';
 import { isEqual } from './isEqual';
 import { Control, ControlFactory, FormKeys, HashMap, UpsertConfig } from './types';
 import { coerceArray, filterControlKeys, filterNil, isBrowser, mergeDeep } from './utils';
+import { LOCAL_STORAGE_TOKEN, SESSION_STORAGE_TOKEN } from './injection-tokens';
 
 const NO_DEBOUNCE = Symbol('NO_DEBOUNCE');
 
+// @dynamic; see https://angular.io/guide/angular-compiler-options#strictmetadataemit
 @Injectable({ providedIn: 'root' })
 export class NgFormsManager<FormsState = any> {
   private readonly store: FormsStore<FormsState>;
+  private readonly browserStorage?: Storage;
   private valueChanges$$: Map<keyof FormsState, Subscription> = new Map();
   private instances$$: Map<keyof FormsState, AbstractControl> = new Map();
   private initialValues$$: Map<keyof FormsState, any> = new Map();
   private destroy$$ = new Subject();
 
-  constructor(@Optional() @Inject(NG_FORMS_MANAGER_CONFIG) private config: NgFormsManagerConfig) {
+  constructor(
+    @Optional() @Inject(NG_FORMS_MANAGER_CONFIG) private config: NgFormsManagerConfig,
+    @Optional() @Inject(LOCAL_STORAGE_TOKEN) private readonly localStorage?: Storage,
+    @Optional() @Inject(SESSION_STORAGE_TOKEN) private readonly sessionStorage?: Storage
+  ) {
     this.store = new FormsStore({} as FormsState);
+    this.browserStorage =
+      this.config.merge().storage.type === 'LocalStorage' ? this.localStorage : this.sessionStorage;
   }
 
   /**
@@ -490,7 +499,7 @@ export class NgFormsManager<FormsState = any> {
    *
    * @example
    *
-   * Removes the control from the store and from LocalStorage
+   * Removes the control from the store and from LocalStorage/SessionStorage
    *
    * manager.clear('login');
    *
@@ -593,19 +602,22 @@ export class NgFormsManager<FormsState = any> {
   }
 
   private removeFromStorage() {
-    localStorage.setItem(this.config.merge().storage.key, JSON.stringify(this.store.getValue()));
+    this.browserStorage?.setItem(
+      this.config.merge().storage.key,
+      JSON.stringify(this.store.getValue())
+    );
   }
 
   private updateStorage(name: keyof FormsState, value: any, config) {
     if (isBrowser() && config.persistState) {
       const storageValue = this.getFromStorage(config.storage.key);
       storageValue[name] = filterControlKeys(value);
-      localStorage.setItem(config.storage.key, JSON.stringify(storageValue));
+      this.browserStorage?.setItem(config.storage.key, JSON.stringify(storageValue));
     }
   }
 
   private getFromStorage(key: string) {
-    return JSON.parse(localStorage.getItem(key) || '{}');
+    return JSON.parse(this.browserStorage?.getItem(key) || '{}');
   }
 
   private deleteControl(name: FormKeys<FormsState>) {

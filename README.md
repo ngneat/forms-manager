@@ -246,7 +246,7 @@ formsManager.destroy();
 formsManager.controlChanges('login').pipe(takeUntil(controlDestroyed('login')));
 ```
 
-## Persist to Local Storage
+## Persist to Local Storage or Session Storage
 
 In the `upsert` method, pass the `persistState` flag:
 
@@ -255,6 +255,8 @@ formsManager.upsert(formName, abstractContorl, {
   persistState: true;
 });
 ```
+
+By default, the state is persisted to Local Storage. Session Storage can be used instead by passing the `NG_FORMS_MANAGER_CONFIG` provider (see below).
 
 ## Validators
 
@@ -335,7 +337,7 @@ interface AppForms {
     name: string;
     age: number;
     city: string;
-  }
+  };
 }
 ```
 
@@ -426,6 +428,7 @@ import { NG_FORMS_MANAGER_CONFIG, NgFormsManagerConfig } from '@ngneat/forms-man
       useValue: new NgFormsManagerConfig({
         debounceTime: 1000, // defaults to 300
         storage: {
+          type: 'SessionStorage',
           key: 'NgFormManager',
         },
       }),

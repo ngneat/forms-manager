@@ -1,7 +1,13 @@
 import { InjectionToken } from '@angular/core';
 
+type DeepPartial<T> = {
+  [P in keyof T]?: DeepPartial<T[P]>;
+};
+
+export type StorageOption = 'LocalStorage' | 'SessionStorage';
 export type Config = {
   storage: {
+    type: StorageOption;
     key: string;
   };
   debounceTime: number;
@@ -9,32 +15,33 @@ export type Config = {
 
 const defaults: Config = {
   storage: {
+    type: 'LocalStorage',
     key: 'ngFormsManager',
   },
   debounceTime: 300,
 };
 
 export function mergeConfig(
-  defaults: Partial<Config>,
-  providerConfig: Partial<Config> = {},
-  inlineConfig: Partial<Config>
-) {
+  defaults: Config,
+  providerConfig: DeepPartial<Config> = {},
+  inlineConfig: DeepPartial<Config>
+): Config {
   return {
     ...defaults,
+    ...providerConfig,
+    ...inlineConfig,
     storage: {
       ...defaults.storage,
       ...providerConfig.storage,
       ...inlineConfig.storage,
     },
-    ...providerConfig,
-    ...inlineConfig,
-  } as Config;
+  };
 }
 
 export class NgFormsManagerConfig {
-  constructor(private config: Partial<Config> = {}) {}
+  constructor(private config: DeepPartial<Config> = {}) {}
 
-  merge(inline: Partial<Config> = {}): Config {
+  merge(inline: DeepPartial<Config> = {}): Config {
     return mergeConfig(defaults, this.config, inline);
   }
 }

@@ -1,7 +1,8 @@
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgFormsManager } from './forms-manager';
-import { NgFormsManagerConfig } from './config';
+import { NG_FORMS_MANAGER_CONFIG, NgFormsManagerConfig } from './config';
+import { LOCAL_STORAGE_TOKEN, SESSION_STORAGE_TOKEN } from './injection-tokens';
 
 // get forms snapshot
 function getSnapshot(formsManager) {
@@ -1438,6 +1439,68 @@ describe('FormsManager', () => {
       formsManager.markAsUntouched('user');
 
       expect(formsManager.getControl('user').untouched).toBeTrue();
+    });
+
+    afterEach(() => {
+      formsManager.unsubscribe();
+      formsManager = null;
+    });
+  });
+
+  describe('Storage', () => {
+    let formsManager: NgFormsManager;
+    let localStorageMock: jasmine.SpyObj<Storage>;
+    let sessionStorageMock: jasmine.SpyObj<Storage>;
+
+    function configureTestingModule(ngFormsManagerConfig: NgFormsManagerConfig) {
+      TestBed.configureTestingModule({
+        providers: [
+          NgFormsManager,
+          {
+            provide: NG_FORMS_MANAGER_CONFIG,
+            useValue: ngFormsManagerConfig,
+          },
+          {
+            provide: LOCAL_STORAGE_TOKEN,
+            useValue: jasmine.createSpyObj('localStorage', ['setItem', 'getItem']),
+          },
+          {
+            provide: SESSION_STORAGE_TOKEN,
+            useValue: jasmine.createSpyObj('sessionStorage', ['setItem', 'getItem']),
+          },
+        ],
+      });
+      formsManager = TestBed.inject(NgFormsManager);
+      localStorageMock = TestBed.inject(LOCAL_STORAGE_TOKEN) as jasmine.SpyObj<Storage>;
+      sessionStorageMock = TestBed.inject(SESSION_STORAGE_TOKEN) as jasmine.SpyObj<Storage>;
+
+      formsManager.upsert('user', new FormGroup({ control: new FormControl('control') }), {
+        persistState: true,
+      });
+    }
+
+    it('should store to localStorage when storage parameter omitted in NG_FORMS_MANAGER_CONFIG', () => {
+      configureTestingModule(new NgFormsManagerConfig());
+      expect(localStorageMock.getItem).toHaveBeenCalled();
+      expect(localStorageMock.setItem).toHaveBeenCalled();
+      expect(sessionStorageMock.getItem).not.toHaveBeenCalled();
+      expect(sessionStorageMock.setItem).not.toHaveBeenCalled();
+    });
+
+    it('should store to localStorage when configured as such in NG_FORMS_MANAGER_CONFIG', () => {
+      configureTestingModule(new NgFormsManagerConfig({ storage: { type: 'LocalStorage' } }));
+      expect(localStorageMock.getItem).toHaveBeenCalled();
+      expect(localStorageMock.setItem).toHaveBeenCalled();
+      expect(sessionStorageMock.getItem).not.toHaveBeenCalled();
+      expect(sessionStorageMock.setItem).not.toHaveBeenCalled();
+    });
+
+    it('should store to sessionStorage when configured as such in NG_FORMS_MANAGER_CONFIG', () => {
+      configureTestingModule(new NgFormsManagerConfig({ storage: { type: 'SessionStorage' } }));
+      expect(sessionStorageMock.getItem).toHaveBeenCalled();
+      expect(sessionStorageMock.setItem).toHaveBeenCalled();
+      expect(localStorageMock.getItem).not.toHaveBeenCalled();
+      expect(localStorageMock.setItem).not.toHaveBeenCalled();
     });
 
     afterEach(() => {
