@@ -2,7 +2,12 @@ import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgFormsManager } from './forms-manager';
 import { NgFormsManagerConfig } from './config';
-import { FORMS_MANAGER_STORAGE, LOCAL_STORAGE_TOKEN } from './injection-tokens';
+import {
+  FORMS_MANAGER_SESSION_STORAGE_PROVIDER,
+  FORMS_MANAGER_STORAGE,
+  LOCAL_STORAGE_TOKEN,
+  SESSION_STORAGE_TOKEN,
+} from './injection-tokens';
 import { Provider } from '@angular/core';
 
 // get forms snapshot
@@ -1454,6 +1459,10 @@ describe('FormsManager', () => {
       'setItem',
       'getItem',
     ]);
+    let sessionStorageMock: jasmine.SpyObj<Storage> = jasmine.createSpyObj('sessionStorage', [
+      'setItem',
+      'getItem',
+    ]);
     let customStorageMock: jasmine.SpyObj<Storage> = jasmine.createSpyObj('customStorage', [
       'setItem',
       'getItem',
@@ -1480,6 +1489,19 @@ describe('FormsManager', () => {
 
       expect(localStorageMock.getItem).toHaveBeenCalled();
       expect(localStorageMock.setItem).toHaveBeenCalled();
+    });
+
+    it('should store to sessionStorage when FORMS_MANAGER_SESSION_STORAGE_PROVIDER used', () => {
+      configureTestingModule([
+        {
+          provide: SESSION_STORAGE_TOKEN,
+          useValue: sessionStorageMock,
+        },
+        FORMS_MANAGER_SESSION_STORAGE_PROVIDER,
+      ]);
+
+      expect(sessionStorageMock.getItem).toHaveBeenCalled();
+      expect(sessionStorageMock.setItem).toHaveBeenCalled();
     });
 
     it('should store to custom storage, provided through FORMS_MANAGER_STORAGE', () => {

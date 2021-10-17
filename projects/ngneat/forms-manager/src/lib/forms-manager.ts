@@ -23,7 +23,7 @@ export class NgFormsManager<FormsState = any> {
 
   constructor(
     @Optional() @Inject(NG_FORMS_MANAGER_CONFIG) private config: NgFormsManagerConfig,
-    @Optional() @Inject(FORMS_MANAGER_STORAGE) private readonly browserStorage?: Storage
+    @Inject(FORMS_MANAGER_STORAGE) private readonly browserStorage?: Storage
   ) {
     this.store = new FormsStore({} as FormsState);
   }
