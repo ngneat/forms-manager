@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.0](https://github.com/ngneat/forms-manager/compare/v2.4.0...v2.5.0) (2021-10-18)
+
+
+### Features
+
+* **forms-manager:** add support for configurable browser storage ([f468036](https://github.com/ngneat/forms-manager/commit/f468036ceca4a34b1f9e5d636853943c17f07dfe))
+* **forms-manager:** add support for configurable browser storage ([07073ee](https://github.com/ngneat/forms-manager/commit/07073ee679bc16205c41b58a8fb304db24914c24))
+* **forms-manager:** add support for session storage ([e87ff6f](https://github.com/ngneat/forms-manager/commit/e87ff6f34392ca890d7efc5ef1a1466e40727175))
+
 ## [2.4.0](https://github.com/ngneat/forms-manager/compare/v2.3.0...v2.4.0) (2021-06-27)
 
 ### Features
