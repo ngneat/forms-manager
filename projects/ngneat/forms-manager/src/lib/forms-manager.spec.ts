@@ -1,7 +1,14 @@
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgFormsManager } from './forms-manager';
 import { NgFormsManagerConfig } from './config';
+import {
+  FORMS_MANAGER_SESSION_STORAGE_PROVIDER,
+  FORMS_MANAGER_STORAGE,
+  LOCAL_STORAGE_TOKEN,
+  SESSION_STORAGE_TOKEN,
+} from './injection-tokens';
+import { Provider } from '@angular/core';
 
 // get forms snapshot
 function getSnapshot(formsManager) {
@@ -1438,6 +1445,75 @@ describe('FormsManager', () => {
       formsManager.markAsUntouched('user');
 
       expect(formsManager.getControl('user').untouched).toBeTrue();
+    });
+
+    afterEach(() => {
+      formsManager.unsubscribe();
+      formsManager = null;
+    });
+  });
+
+  describe('Storage', () => {
+    let formsManager: NgFormsManager;
+    let localStorageMock: jasmine.SpyObj<Storage> = jasmine.createSpyObj('localStorage', [
+      'setItem',
+      'getItem',
+    ]);
+    let sessionStorageMock: jasmine.SpyObj<Storage> = jasmine.createSpyObj('sessionStorage', [
+      'setItem',
+      'getItem',
+    ]);
+    let customStorageMock: jasmine.SpyObj<Storage> = jasmine.createSpyObj('customStorage', [
+      'setItem',
+      'getItem',
+    ]);
+
+    function configureTestingModule(providers: Array<Provider>) {
+      TestBed.configureTestingModule({
+        providers: [NgFormsManager, ...providers],
+      });
+      formsManager = TestBed.inject(NgFormsManager);
+
+      formsManager.upsert('user', new FormGroup({ control: new FormControl('control') }), {
+        persistState: true,
+      });
+    }
+
+    it('should store to localStorage (by default) when FORMS_MANAGER_STORAGE not provided', () => {
+      configureTestingModule([
+        {
+          provide: LOCAL_STORAGE_TOKEN,
+          useValue: localStorageMock,
+        },
+      ]);
+
+      expect(localStorageMock.getItem).toHaveBeenCalled();
+      expect(localStorageMock.setItem).toHaveBeenCalled();
+    });
+
+    it('should store to sessionStorage when FORMS_MANAGER_SESSION_STORAGE_PROVIDER used', () => {
+      configureTestingModule([
+        {
+          provide: SESSION_STORAGE_TOKEN,
+          useValue: sessionStorageMock,
+        },
+        FORMS_MANAGER_SESSION_STORAGE_PROVIDER,
+      ]);
+
+      expect(sessionStorageMock.getItem).toHaveBeenCalled();
+      expect(sessionStorageMock.setItem).toHaveBeenCalled();
+    });
+
+    it('should store to custom storage, provided through FORMS_MANAGER_STORAGE', () => {
+      configureTestingModule([
+        {
+          provide: FORMS_MANAGER_STORAGE,
+          useValue: customStorageMock,
+        },
+      ]);
+
+      expect(customStorageMock.getItem).toHaveBeenCalled();
+      expect(customStorageMock.setItem).toHaveBeenCalled();
     });
 
     afterEach(() => {

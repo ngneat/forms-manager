@@ -15,20 +15,20 @@ const defaults: Config = {
 };
 
 export function mergeConfig(
-  defaults: Partial<Config>,
+  defaults: Config,
   providerConfig: Partial<Config> = {},
   inlineConfig: Partial<Config>
-) {
+): Config {
   return {
     ...defaults,
+    ...providerConfig,
+    ...inlineConfig,
     storage: {
       ...defaults.storage,
       ...providerConfig.storage,
       ...inlineConfig.storage,
     },
-    ...providerConfig,
-    ...inlineConfig,
-  } as Config;
+  };
 }
 
 export class NgFormsManagerConfig {

@@ -8,9 +8,11 @@ import { FormsStore } from './forms-manager.store';
 import { isEqual } from './isEqual';
 import { Control, ControlFactory, FormKeys, HashMap, UpsertConfig } from './types';
 import { coerceArray, filterControlKeys, filterNil, isBrowser, mergeDeep } from './utils';
+import { FORMS_MANAGER_STORAGE } from './injection-tokens';
 
 const NO_DEBOUNCE = Symbol('NO_DEBOUNCE');
 
+// @dynamic; see https://angular.io/guide/angular-compiler-options#strictmetadataemit
 @Injectable({ providedIn: 'root' })
 export class NgFormsManager<FormsState = any> {
   private readonly store: FormsStore<FormsState>;
@@ -19,7 +21,10 @@ export class NgFormsManager<FormsState = any> {
   private initialValues$$: Map<keyof FormsState, any> = new Map();
   private destroy$$ = new Subject();
 
-  constructor(@Optional() @Inject(NG_FORMS_MANAGER_CONFIG) private config: NgFormsManagerConfig) {
+  constructor(
+    @Optional() @Inject(NG_FORMS_MANAGER_CONFIG) private config: NgFormsManagerConfig,
+    @Inject(FORMS_MANAGER_STORAGE) private readonly browserStorage?: Storage
+  ) {
     this.store = new FormsStore({} as FormsState);
   }
 
@@ -490,7 +495,7 @@ export class NgFormsManager<FormsState = any> {
    *
    * @example
    *
-   * Removes the control from the store and from LocalStorage
+   * Removes the control from the store and from browser storage
    *
    * manager.clear('login');
    *
@@ -593,19 +598,22 @@ export class NgFormsManager<FormsState = any> {
   }
 
   private removeFromStorage() {
-    localStorage.setItem(this.config.merge().storage.key, JSON.stringify(this.store.getValue()));
+    this.browserStorage?.setItem(
+      this.config.merge().storage.key,
+      JSON.stringify(this.store.getValue())
+    );
   }
 
   private updateStorage(name: keyof FormsState, value: any, config) {
     if (isBrowser() && config.persistState) {
       const storageValue = this.getFromStorage(config.storage.key);
       storageValue[name] = filterControlKeys(value);
-      localStorage.setItem(config.storage.key, JSON.stringify(storageValue));
+      this.browserStorage?.setItem(config.storage.key, JSON.stringify(storageValue));
     }
   }
 
   private getFromStorage(key: string) {
-    return JSON.parse(localStorage.getItem(key) || '{}');
+    return JSON.parse(this.browserStorage?.getItem(key) || '{}');
   }
 
   private deleteControl(name: FormKeys<FormsState>) {
