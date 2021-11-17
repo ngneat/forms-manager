@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { from, isObservable, Observable, of } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 export type Diff<T, U> = T extends U ? never : T;

@@ -23,6 +23,7 @@
     "@angular/platform-browser-dynamic": "~9.1.11",
     "@angular/router": "~9.1.11",
     "@ngneat/lib": "^1.0.1",
+    "@ngneat/storage": "^1.0.0",
     "@schuchard/prettier": "^3.1.0",
     "core-js": "^2.5.4",
     "ngx-semantic-version": "^1.2.1",
