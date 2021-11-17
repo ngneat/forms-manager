@@ -256,53 +256,25 @@ formsManager.upsert(formName, abstractContorl, {
 });
 ```
 
-By default, the state is persisted to `localStorage` ([Link](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)).
-
-For storage to `sessionStorage` ([Link](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage)), add `FORMS_MANAGER_SESSION_STORAGE_PROVIDER` to the providers array in `app.module.ts`:
+Library use `@ngneat/storage`([Link](https://github.com/ngneat/storage)) library which provides LocalStorageManager and SessionStorageManager. It's possible to store the form value into a custom storage. Just implement the PersistManager interface which is part of `@ngneat/storage` and use it when calling the upsert function. Storage implementation support Observables and Promises.
 
 ```ts
-import { FORMS_MANAGER_SESSION_STORAGE_PROVIDER } from '@ngneat/forms-manager';
+export class StateStoreManager<T> implements PersistManager<T> {
+  setValue(key: string, data: T) {
+     ...
+  }
 
-@NgModule({
-  declarations: [AppComponent],
-  imports: [ ... ],
-  providers: [
+  getValue(key: string) {
     ...
-    FORMS_MANAGER_SESSION_STORAGE_PROVIDER,
-    ...
-  ],
-  bootstrap: [AppComponent],
-})
-export class AppModule {}
+  }
+}
 ```
 
-Furthermore, a **custom storage provider**, which must implement the `Storage` interface ([Link](https://developer.mozilla.org/en-US/docs/Web/API/Storage)) can be provided through the `FORMS_MANAGER_STORAGE` token:
-
 ```ts
-import { FORMS_MANAGER_STORAGE } from '@ngneat/forms-manager';
-
-class MyStorage implements Storage {
-  public clear() { ... }
-  public key(index: number): string | null { ... }
-  public getItem(key: string): string | null { ... }
-  public removeItem(key: string) { ... }
-  public setItem(key: string, value: string) { ... }
-}
-
-@NgModule({
-  declarations: [AppComponent],
-  imports: [ ... ],
-  providers: [
-    ...
-    {
-      provide: FORMS_MANAGER_STORAGE,
-      useValue: MyStorage,
-    },
-    ...
-  ],
-  bootstrap: [AppComponent],
-})
-export class AppModule {}
+formsManager.upsert(formName, abstractContorl, {
+  persistState: true,
+  persistManager: new StateStoreManager(),
+});
 ```
 
 ## Validators

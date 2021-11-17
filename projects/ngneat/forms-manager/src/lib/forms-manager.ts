@@ -1,14 +1,15 @@
 import { Inject, Injectable, Optional } from '@angular/core';
-import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
-import { EMPTY, merge, Observable, Subject, Subscription, timer } from 'rxjs';
-import { debounce, distinctUntilChanged, filter, map, mapTo } from 'rxjs/operators';
-import { deleteControl, findControl, handleFormArray, toStore } from './builders';
-import { Config, NgFormsManagerConfig, NG_FORMS_MANAGER_CONFIG } from './config';
-import { FormsStore } from './forms-manager.store';
-import { isEqual } from './isEqual';
-import { Control, ControlFactory, FormKeys, HashMap, UpsertConfig } from './types';
+import { AbstractControl, FormGroup, FormArray } from '@angular/forms';
 import { coerceArray, filterControlKeys, filterNil, isBrowser, mergeDeep } from './utils';
-import { FORMS_MANAGER_STORAGE } from './injection-tokens';
+import { EMPTY, merge, Observable, Subject, Subscription, timer } from 'rxjs';
+import { debounce, distinctUntilChanged, filter, first, map, mapTo, take } from 'rxjs/operators';
+import { FormsStore } from './forms-manager.store';
+import { Control, ControlFactory, FormKeys, HashMap, UpsertConfig } from './types';
+import { Config, NG_FORMS_MANAGER_CONFIG, NgFormsManagerConfig } from './config';
+import { isEqual } from './isEqual';
+import { deleteControl, findControl, handleFormArray, toStore } from './builders';
+import { LocalStorageManager } from '@ngneat/storage';
+import { wrapIntoObservable } from '@ngneat/storage/lib/utils';
 
 const NO_DEBOUNCE = Symbol('NO_DEBOUNCE');
 
@@ -19,12 +20,10 @@ export class NgFormsManager<FormsState = any> {
   private valueChanges$$: Map<keyof FormsState, Subscription> = new Map();
   private instances$$: Map<keyof FormsState, AbstractControl> = new Map();
   private initialValues$$: Map<keyof FormsState, any> = new Map();
+  private persistManager = new LocalStorageManager();
   private destroy$$ = new Subject();
 
-  constructor(
-    @Optional() @Inject(NG_FORMS_MANAGER_CONFIG) private config: NgFormsManagerConfig,
-    @Inject(FORMS_MANAGER_STORAGE) private readonly browserStorage?: Storage
-  ) {
+  constructor(@Optional() @Inject(NG_FORMS_MANAGER_CONFIG) private config: NgFormsManagerConfig) {
     this.store = new FormsStore({} as FormsState);
   }
 
@@ -495,7 +494,7 @@ export class NgFormsManager<FormsState = any> {
    *
    * @example
    *
-   * Removes the control from the store and from browser storage
+   * Removes the control from the store and from given PersistStorageManager
    *
    * manager.clear('login');
    *
@@ -540,13 +539,20 @@ export class NgFormsManager<FormsState = any> {
       this.setInitialValue(name, control.value);
     }
 
-    if (isBrowser() && config.persistState && this.hasControl(name) === false) {
-      const storageValue = this.getFromStorage(mergedConfig.storage.key);
-      if (storageValue[name]) {
-        this.store.update({
-          [name]: mergeDeep(toStore(name, control), storageValue[name]),
-        } as Partial<FormsState>);
-      }
+    if (
+      (isBrowser() || !(config.persistManager instanceof LocalStorageManager)) &&
+      config.persistState &&
+      this.hasControl(name) === false
+    ) {
+      this.persistManager = config.persistManager || this.persistManager;
+      this.getFromStorage(mergedConfig.storage.key).subscribe(value => {
+        const storageValue = value;
+        if (storageValue[name]) {
+          this.store.update({
+            [name]: mergeDeep(toStore(name, control), storageValue[name]),
+          } as Partial<FormsState>);
+        }
+      });
     }
 
     /** If the control already exist, patch the control with the store value */
@@ -598,22 +604,29 @@ export class NgFormsManager<FormsState = any> {
   }
 
   private removeFromStorage() {
-    this.browserStorage?.setItem(
-      this.config.merge().storage.key,
-      JSON.stringify(this.store.getValue())
-    );
+    wrapIntoObservable(
+      this.persistManager.setValue(this.config.merge().storage.key, this.store.getValue())
+    )
+      .pipe(first())
+      .subscribe();
   }
 
   private updateStorage(name: keyof FormsState, value: any, config) {
     if (isBrowser() && config.persistState) {
-      const storageValue = this.getFromStorage(config.storage.key);
-      storageValue[name] = filterControlKeys(value);
-      this.browserStorage?.setItem(config.storage.key, JSON.stringify(storageValue));
+      this.getFromStorage(config.storage.key)
+        .pipe(first())
+        .subscribe(valueFromStorage => {
+          const storageValue = valueFromStorage;
+          storageValue[name] = filterControlKeys(value);
+          wrapIntoObservable(this.persistManager.setValue(config.storage.key, storageValue))
+            .pipe(first())
+            .subscribe();
+        });
     }
   }
 
   private getFromStorage(key: string) {
-    return JSON.parse(this.browserStorage?.getItem(key) || '{}');
+    return wrapIntoObservable(this.persistManager.getValue(key)).pipe(take(1));
   }
 
   private deleteControl(name: FormKeys<FormsState>) {
