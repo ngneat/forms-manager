@@ -132,7 +132,7 @@
       "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "projects/ngneat/forms-manager/tsconfig.lib.json",
             "project": "projects/ngneat/forms-manager/ng-package.json"
