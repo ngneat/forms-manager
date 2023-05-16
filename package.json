@@ -4,7 +4,7 @@
   "scripts": {
     "release": "cd projects/ngneat/forms-manager/ && standard-version --infile ../../../CHANGELOG.md",
     "test": "ng test @ngneat/forms-manager",
-    "build": "ng build @ngneat/forms-manager --prod && npm run copy:readme",
+    "build": "ng build @ngneat/forms-manager --configuration production && npm run copy:readme",
     "ng": "ng",
     "prettier": "prettier --write \"**/*.{js,json,css,scss,less,md,ts,html,component.html}\"",
     "start": "ng serve",
@@ -14,14 +14,14 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "~11.2.14",
-    "@angular/common": "~11.2.14",
-    "@angular/compiler": "~11.2.14",
-    "@angular/core": "~11.2.14",
-    "@angular/forms": "~11.2.14",
-    "@angular/platform-browser": "~11.2.14",
-    "@angular/platform-browser-dynamic": "~11.2.14",
-    "@angular/router": "~11.2.14",
+    "@angular/animations": "~12.2.17",
+    "@angular/common": "~12.2.17",
+    "@angular/compiler": "~12.2.17",
+    "@angular/core": "~12.2.17",
+    "@angular/forms": "~12.2.17",
+    "@angular/platform-browser": "~12.2.17",
+    "@angular/platform-browser-dynamic": "~12.2.17",
+    "@angular/router": "~12.2.17",
     "@ngneat/lib": "^2.0.1",
     "@schuchard/prettier": "^3.1.0",
     "core-js": "^2.5.4",
@@ -29,13 +29,13 @@
     "ngx-take-until-destroy": "^5.4.0",
     "rxjs": "~6.5.4",
     "tslib": "^2.0.0",
-    "zone.js": "~0.10.2"
+    "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.1102.19",
+    "@angular-devkit/build-angular": "~12.2.18",
     "@angular-devkit/build-ng-packagr": "~0.1002.4",
-    "@angular/cli": "~11.2.19",
-    "@angular/compiler-cli": "~11.2.14",
+    "@angular/cli": "~12.2.18",
+    "@angular/compiler-cli": "~12.2.17",
     "@commitlint/cli": "8.1.0",
     "@commitlint/config-angular": "^8.1.0",
     "@commitlint/config-conventional": "^8.1.0",
@@ -56,14 +56,14 @@
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
     "lint-staged": "^9.2.0",
-    "ng-packagr": "^11.2.4",
-    "prettier": "^1.18.2",
+    "ng-packagr": "^12.2.7",
+    "prettier": "2.3.0",
     "protractor": "~7.0.0",
     "standard-version": "^6.0.1",
     "ts-node": "~8.3.0",
     "tsickle": "0.40.0",
     "tslint": "~6.1.0",
-    "typescript": "~4.0.8"
+    "typescript": "~4.3.5"
   },
   "husky": {
     "hooks": {
