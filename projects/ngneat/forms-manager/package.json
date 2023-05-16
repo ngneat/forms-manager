@@ -17,6 +17,9 @@
     "persist forms",
     "cross validation"
   ],
+  "dependencies": {
+    "tslib": "^2.0.0"
+  },
   "author": {
     "name": "Netanel Basal",
     "email": "netanel7799@gmail.com",
